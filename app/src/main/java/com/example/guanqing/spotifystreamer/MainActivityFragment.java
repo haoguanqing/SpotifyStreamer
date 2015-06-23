@@ -23,7 +23,12 @@ public class MainActivityFragment extends Fragment {
 
         String[] urls = {"http://i.imgur.com/DvpvklR.png",
                 "https://i.scdn.co/image/a370c003642050eeaec0bc604409aa585ca92297",
-                "https://i.scdn.co/image/61de0bd715d34d394b95f5191ad2a4aed0059132"};
+                "https://i.scdn.co/image/61de0bd715d34d394b95f5191ad2a4aed0059132",
+                "http://i.imgur.com/DvpvklR.png",
+                "https://i.scdn.co/image/a370c003642050eeaec0bc604409aa585ca92297",
+                "https://i.scdn.co/image/61de0bd715d34d394b95f5191ad2a4aed0059132",
+                "http://i.imgur.com/DvpvklR.png"};
+
         String[] names = {"Gaga", "Muse", "The Black Parade", "Linkin Park", "10 Years", "Green Day", "Olivia Ong"};
 
         MainBlockAdapter adapter = new MainBlockAdapter(

@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="red">#A72047</color>
-    <color name="pink">#C28194</color>
-    <color name="passion">#4E7283</color>
-    <color name="serafim">#75ABC5</color>
-    <color name="optimism">#C7EBF9</color>
-
-    <color name="light">#F6F7B5</color>
-    <color name="mid">#86D3AE</color>
-    <color name="dark">#157795</color>
 
     <color name="gray">#f2f2f2</color>
     <color name="gray2">#eaeaea</color>

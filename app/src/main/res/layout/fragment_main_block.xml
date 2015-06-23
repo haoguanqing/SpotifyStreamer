@@ -12,16 +12,17 @@
         android:adjustViewBounds="true"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:maxWidth="108dp"
-        android:maxHeight="108dp"
+        android:maxWidth="96dp"
+        android:maxHeight="96dp"
         android:scaleType="fitCenter"
         android:alpha="0.85"/>
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="108dp"
         android:text="@string/artist_name"
         android:id="@+id/artist_name"
+        android:gravity="center_vertical"
         android:layout_centerVertical="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:typeface="monospace"

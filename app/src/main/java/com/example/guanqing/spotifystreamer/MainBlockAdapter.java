@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 /**
  * Created by Guanqing on 2015/6/23.
  */
@@ -30,11 +32,17 @@ public class MainBlockAdapter extends ArrayAdapter<String>{
         ImageView imageView = (ImageView) blockView.findViewById(R.id.artist_thumbnail);
         TextView textView = (TextView) blockView.findViewById(R.id.artist_name);
 
-        //Picasso.with(context).load(imageUrl[position]).into(imageView);
-        imageView.setImageResource(R.drawable.cover);
+        //three ways to set images to ImageViews
+        Picasso.with(context).load(imageUrl[position]).into(imageView);
+        //Picasso.with(context).load(R.drawable.cover).into(imageView);
+        //imageView.setImageResource(R.drawable.cover);
+
+        //set text
         textView.setText(artistName[position]);
 
-        if (position%4==0){
+        //set background colors with different shades of gray for different blocks.
+        // easier to extinguish
+        if (position % 4==0){
             blockView.setBackgroundResource(R.color.gray);
         }else if(position%4==2){
             blockView.setBackgroundResource(R.color.gray2);
