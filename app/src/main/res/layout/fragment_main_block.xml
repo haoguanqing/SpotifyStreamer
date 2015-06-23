@@ -7,7 +7,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/artist_image"
+        android:id="@+id/artist_thumbnail"
         android:src="@drawable/cover"
         android:adjustViewBounds="true"
         android:layout_alignParentLeft="true"
@@ -25,7 +25,7 @@
         android:layout_centerVertical="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:typeface="monospace"
-        android:layout_toRightOf="@+id/artist_image"
+        android:layout_toRightOf="@+id/artist_thumbnail"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:alpha="0.85" />

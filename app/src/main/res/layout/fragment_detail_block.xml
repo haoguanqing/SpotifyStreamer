@@ -6,7 +6,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-            android:id="@+id/thumbnail"
+            android:id="@+id/album_thumbnail"
         android:src="@drawable/cover"
         android:adjustViewBounds="true"
         android:layout_alignParentLeft="true"
@@ -25,7 +25,7 @@
         android:typeface="monospace"
         android:alpha="0.85"
         android:layout_below="@+id/track_duration"
-        android:layout_toRightOf="@+id/thumbnail"
+        android:layout_toRightOf="@+id/album_thumbnail"
         android:layout_marginLeft="20dp"/>
 
     <TextView
