@@ -9,15 +9,12 @@
     android:focusable="true"
     android:focusableInTouchMode="true">
 
-    <EditText
-        android:id="@+id/search_bar"
+    <SearchView
+        android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:hint="@string/search_for_artists"
-        android:imeOptions="actionSearch"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:ems="10" />
+        android:layout_marginBottom="@dimen/activity_vertical_margin" />
 
     <ListView
         android:id="@+id/search_results_list"

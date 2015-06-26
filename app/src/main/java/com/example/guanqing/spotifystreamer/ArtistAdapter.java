@@ -13,11 +13,11 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by Guanqing on 2015/6/23.
  */
-public class MainBlockAdapter extends ArrayAdapter<String>{
+public class ArtistAdapter extends ArrayAdapter<String>{
     private final Activity context;
     private final String[] imageUrl;
     private final String[] artistName;
-    public MainBlockAdapter(Activity context, String[] imageUrl, String[] artistName){
+    public ArtistAdapter(Activity context, String[] imageUrl, String[] artistName){
         super(context, R.layout.fragment_main_block, artistName);
         this.context = context;
         this.imageUrl = imageUrl;
