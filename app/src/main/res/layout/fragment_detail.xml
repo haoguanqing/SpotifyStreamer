@@ -24,6 +24,7 @@
         android:maxHeight="112dp"
         android:cropToPadding="true"
         android:scaleType="centerCrop"
+        android:layout_marginBottom="8dp"
         android:alpha="0.9"/>
 
     <ListView

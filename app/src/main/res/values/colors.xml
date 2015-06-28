@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="gray">#f2f2f2</color>
-    <color name="gray2">#eaeaea</color>
-
+    <color name="customize_gray">#101010</color>
 
     <drawable name="screen_background_light">#ffffffff</drawable>
     <drawable name="screen_background_dark">#ff000000</drawable>

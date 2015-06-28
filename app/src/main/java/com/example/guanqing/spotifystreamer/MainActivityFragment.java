@@ -50,7 +50,6 @@ public class MainActivityFragment extends Fragment {
         searchView.setQueryHint(getString(R.string.search_artist_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;

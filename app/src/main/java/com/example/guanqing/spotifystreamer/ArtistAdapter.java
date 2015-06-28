@@ -55,7 +55,7 @@ public class ArtistAdapter extends ArrayAdapter<Artist>{
         //set different background colors for different blocks.
         // easier to extinguish
         if (position % 2==1){
-            blockView.setBackgroundResource(R.color.background_material_dark);
+            blockView.setBackgroundResource(R.color.customize_gray);
         }
 
         return blockView;

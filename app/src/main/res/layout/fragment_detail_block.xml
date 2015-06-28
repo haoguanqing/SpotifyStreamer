@@ -16,39 +16,37 @@
         android:maxHeight="80dp"
         android:cropToPadding="true"
         android:scaleType="fitCenter"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:alpha="0.9"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:minHeight="96dp"
+        android:maxHeight="96dp"
         android:text="@string/track_name"
         android:id="@+id/track_name"
-        android:gravity="center_vertical"
         android:layout_centerVertical="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/primary_dark_material_light"
+        android:textColor="@color/lighter_gray"
         android:typeface="monospace"
-
-        android:layout_toRightOf="@+id/album_thumbnail"
-        android:layout_toEndOf="@+id/album_thumbnail"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:alpha="0.85" />
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="40dp"
+        android:alpha="0.9" />
 
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmallInverse"
         android:text="@string/album_name"
         android:id="@+id/album_name"
-
-        android:layout_below="@+id/track_name"
-        android:layout_alignBaseline="@+id/track_name"
-        android:layout_marginTop="16dp"
-        android:layout_alignLeft="@+id/track_name" />
+        android:textColor="@color/primary_dark_material_light"
+        android:layout_above="@+id/track_name"
+        android:layout_alignBottom="@+id/album_thumbnail"
+        android:layout_alignLeft="@+id/track_name"
+        android:layout_alignStart="@+id/track_name"
+        android:layout_marginRight="8dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -56,10 +54,11 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/track_duration"
         android:id="@+id/track_duration"
-        android:layout_centerVertical="true"
-        android:layout_alignRight="@+id/track_name"
-        android:layout_alignEnd="@+id/track_name"
-        android:layout_marginRight="20dp" />
+        android:textColor="@color/primary_dark_material_light"
+        android:layout_alignBottom="@+id/album_thumbnail"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="4dp"/>
 
 
 </RelativeLayout>

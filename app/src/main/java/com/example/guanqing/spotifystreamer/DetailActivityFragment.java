@@ -12,6 +12,8 @@ import android.widget.ListView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -57,11 +59,14 @@ public class DetailActivityFragment extends Fragment {
         String artistName = artistInfo[0];
         String artistId = artistInfo[1];
         String url = artistInfo[2];
+        final Map<String, Object> countryParameter = new HashMap<>();
+        countryParameter.put("country", "us");
+
         if (!url.isEmpty()){
             Picasso.with(getActivity()).load(url).into(imageView);
         }
 
-        mSpotifyService.getArtistTopTrack(artistId, new Callback<Tracks>() {
+        mSpotifyService.getArtistTopTrack(artistId, countryParameter, new Callback<Tracks>() {
             @Override
             public void success(Tracks tracks, Response response) {
                 trackList.clear();
@@ -79,14 +84,6 @@ public class DetailActivityFragment extends Fragment {
 
             }
         });
-
-/*        try{
-            Picasso.with(getActivity()).load(url).into(imageView);
-        } catch (Exception e){
-            Log.e(LOG_TAG, "MalformedURL");
-        }*/
-
-
 
         return rootView;
     }
