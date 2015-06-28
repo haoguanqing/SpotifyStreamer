@@ -1,5 +1,6 @@
 package com.example.guanqing.spotifystreamer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -39,8 +40,8 @@ public class MainActivityFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main_search, container, false);
         SearchView searchView = (SearchView) rootView.findViewById(R.id.searchView);
         ListView listView = (ListView) rootView.findViewById(R.id.search_results_list);
-        final ArrayList<Artist> artistArrayList = new ArrayList<>();
-        //ArtistAdapter adapter = new ArtistAdapter(getActivity(), artistArrayList);
+        final ArrayList<Artist> artistsList = new ArrayList<>();
+        //ArtistAdapter adapter = new ArtistAdapter(getActivity(), artistsList);
 
         searchView.setQueryHint(getString(R.string.search_artist_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -52,10 +53,12 @@ public class MainActivityFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 mSpotifyService.searchArtists(newText, new Callback<ArtistsPager>() {
+
+
                     @Override
                     public void success(ArtistsPager artistsPager, Response response) {
-                        artistArrayList.clear();
-                        artistArrayList.addAll(new ArrayList<>(artistsPager.artists.items));
+                        artistsList.clear();
+                        artistsList.addAll(new ArrayList<>(artistsPager.artists.items));
                     }
 
                     @Override
@@ -68,38 +71,28 @@ public class MainActivityFragment extends Fragment {
         });
 
 
-        String[] urls = {"https://i.scdn.co/image/2bc67201ad4ed2d810185697d97da86aa7128e18",
-                "https://i.scdn.co/image/0b3c04473aa6a2db8235e5092ec3413f35752b8d",
-                "https://i.scdn.co/image/626be859c3f3e64df9c4032a2f3b4bfacd9875d2",
-                "https://i.scdn.co/image/5a115ce35ef55f4ba6aa81c3675b5ec3eeb3f90f",
-                "https://i.scdn.co/image/77970fa30303f6ddcd5b3b3520bf1c6296521ba9",
-                "http://i.imgur.com/DvpvklR.png",
-                "https://i.scdn.co/image/626be859c3f3e64df9c4032a2f3b4bfacd9875d2"};
-
-        String[] names = {"Gaga", "Muse", "The Black Parade", "Linkin Park", "10 Years", "Green Day", "Olivia Ong"};
-
         final ArtistAdapter adapter = new ArtistAdapter(
-                getActivity(),
-                urls,
-                names
-        );
+                getActivity(),R.layout.fragment_main_block, artistsList);
 
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Artist artist = artistsList.get(position);
+                buildTrackIntent(artist);
+            }
+
+            public void buildTrackIntent(Artist artist) {
                 //explicit intent
-                //String artistName = adapter.getItem(position).name;
-                //Intent intent = new Intent(getActivity(), DetailActivity.class).putExtra(Intent.EXTRA_TEXT, artistName);
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                String[] nameAndId = {artist.name, artist.id};
+                intent.putExtra(Intent.EXTRA_TEXT, nameAndId);
+                startActivity(intent);
             }
         });
 
         return rootView;
     }
-
-
-    //========================================================================================
-    //connect to internet
 
 }
