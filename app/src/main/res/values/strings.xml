@@ -8,8 +8,7 @@
     <string name="track_duration">03:46</string>
 
     <string name="search_artist_hint">FIND THE ARTISTS</string>
-    <string name="no_result_found">no result found</string>
-
+    <string name="no_result_found">No result found for\u0020</string>
 
     <string name="title_activity_detail">Top 10 Tracks</string>
 

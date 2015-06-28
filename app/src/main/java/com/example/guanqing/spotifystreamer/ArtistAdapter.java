@@ -39,23 +39,21 @@ public class ArtistAdapter extends ArrayAdapter<Artist>{
         ImageView imageView = (ImageView) blockView.findViewById(R.id.artist_thumbnail);
         TextView textView = (TextView) blockView.findViewById(R.id.artist_name);
 
-        if (artistList.isEmpty()){
-            textView.setText(R.string.no_result_found);
-        }else{
-            Artist currentArtist = getItem(position);
 
-            //set images to ImageViews
-            if (!currentArtist.images.isEmpty()){
-                String imageUrl = currentArtist.images.get(0).url;
-                Picasso.with(mContext).load(imageUrl).into(imageView);
-            }
+        Artist currentArtist = getItem(position);
 
-            //set text
-            String artistName = currentArtist.name;
-            textView.setText(artistName);
+        //set images to ImageViews
+        if (!currentArtist.images.isEmpty()){
+            String imageUrl = currentArtist.images.get(0).url;
+            Picasso.with(mContext).load(imageUrl).into(imageView);
         }
 
-        //set background colors with different shades of gray for different blocks.
+        //set text
+        String artistName = currentArtist.name;
+        textView.setText(artistName);
+
+
+        //set different background colors for different blocks.
         // easier to extinguish
         if (position % 2==1){
             blockView.setBackgroundResource(R.color.background_material_dark);
@@ -63,4 +61,6 @@ public class ArtistAdapter extends ArrayAdapter<Artist>{
 
         return blockView;
     }
+
+
 }

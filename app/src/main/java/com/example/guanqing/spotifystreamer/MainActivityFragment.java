@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -26,7 +27,6 @@ import retrofit.client.Response;
  */
 public class MainActivityFragment extends Fragment {
     private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
-
     private SpotifyService mSpotifyService = null;
 
     public MainActivityFragment() {
@@ -37,44 +37,56 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main_search, container, false);
-        SearchView searchView = (SearchView) rootView.findViewById(R.id.searchView);
-        ListView listView = (ListView) rootView.findViewById(R.id.search_results_list);
+        final View rootView = inflater.inflate(R.layout.fragment_main_search, container, false);
+        final SearchView searchView = (SearchView) rootView.findViewById(R.id.searchView);
+        final ListView listView = (ListView) rootView.findViewById(R.id.search_results_list);
         final ArrayList<Artist> artistsList = new ArrayList<>();
-        //ArtistAdapter adapter = new ArtistAdapter(getActivity(), artistsList);
+
+        final ArtistAdapter adapter = new ArtistAdapter(
+                getActivity(),R.layout.fragment_main_block, artistsList);
+
+        listView.setAdapter(adapter);
 
         searchView.setQueryHint(getString(R.string.search_artist_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
+            public boolean onQueryTextChange(final String newText) {
+
+
                 mSpotifyService.searchArtists(newText, new Callback<ArtistsPager>() {
-
-
                     @Override
                     public void success(ArtistsPager artistsPager, Response response) {
-                        artistsList.clear();
-                        artistsList.addAll(new ArrayList<>(artistsPager.artists.items));
+                        if (artistsPager.artists.total != 0) {
+                            artistsList.clear();
+                            artistsList.addAll(new ArrayList<>(artistsPager.artists.items));
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            artistsList.clear();
+                            noResultToast();
+                            adapter.notifyDataSetChanged();
+                        }
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
+                    public void failure(RetrofitError error) {}
 
+                    public void noResultToast() {
+                        String text = getString(R.string.no_result_found) + newText;
+                        Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
                     }
+
                 });
                 return true;
             }
         });
 
-
-        final ArtistAdapter adapter = new ArtistAdapter(
-                getActivity(),R.layout.fragment_main_block, artistsList);
-
-        listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
