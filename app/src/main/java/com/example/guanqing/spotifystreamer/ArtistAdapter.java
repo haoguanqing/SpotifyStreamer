@@ -18,7 +18,6 @@ import kaaes.spotify.webapi.android.models.Artist;
  * Created by Guanqing on 2015/6/23.
  */
 public class ArtistAdapter extends ArrayAdapter<Artist>{
-    private final String LOG_TAG = ArtistAdapter.class.getSimpleName();
     private final Context mContext;
     private ArrayList<Artist> artistList = new ArrayList<>();
     private int layoutResource;
@@ -28,24 +27,24 @@ public class ArtistAdapter extends ArrayAdapter<Artist>{
         this.mContext = context;
         this.layoutResource = res;
         this.artistList = artistList;
-
     }
 
     @Override
     public View getView(int position, View view, ViewGroup parent){
 
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View blockView = inflater.inflate(R.layout.fragment_main_block, null);
+        View blockView = inflater.inflate(layoutResource, null);
         ImageView imageView = (ImageView) blockView.findViewById(R.id.artist_thumbnail);
         TextView textView = (TextView) blockView.findViewById(R.id.artist_name);
 
-
-        Artist currentArtist = getItem(position);
+        Artist currentArtist = artistList.get(position);
 
         //set images to ImageViews
         if (!currentArtist.images.isEmpty()){
             String imageUrl = currentArtist.images.get(0).url;
             Picasso.with(mContext).load(imageUrl).into(imageView);
+        } else{
+            Picasso.with(mContext).load(R.drawable.blank_cd).into(imageView);
         }
 
         //set text

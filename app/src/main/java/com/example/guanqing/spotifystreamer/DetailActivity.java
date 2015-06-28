@@ -8,6 +8,7 @@ import android.view.MenuItem;
 
 
 public class DetailActivity extends ActionBarActivity {
+    private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,14 +17,17 @@ public class DetailActivity extends ActionBarActivity {
         setTitle(getString(R.string.title_activity_detail));
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        String[] artistInfo;
         if (getIntent()!=null){
-            String[] nameAndId = getIntent().getStringArrayExtra(Intent.EXTRA_TEXT);
-            getSupportActionBar().setSubtitle(nameAndId[0]);
+            artistInfo = getIntent().getStringArrayExtra(Intent.EXTRA_TEXT);
+            getSupportActionBar().setSubtitle(artistInfo[0]);
+
         }
 
         setContentView(R.layout.activity_detail);
     }
+
+
 
 
     @Override

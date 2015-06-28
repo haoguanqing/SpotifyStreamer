@@ -39,7 +39,7 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_main_search, container, false);
         final SearchView searchView = (SearchView) rootView.findViewById(R.id.searchView);
-        final ListView listView = (ListView) rootView.findViewById(R.id.search_results_list);
+        final ListView listView = (ListView) rootView.findViewById(R.id.search_results_listView);
         final ArrayList<Artist> artistsList = new ArrayList<>();
 
         final ArtistAdapter adapter = new ArtistAdapter(
@@ -75,7 +75,8 @@ public class MainActivityFragment extends Fragment {
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {}
+                    public void failure(RetrofitError error) {
+                    }
 
                     public void noResultToast() {
                         String text = getString(R.string.no_result_found) + newText;
@@ -98,8 +99,12 @@ public class MainActivityFragment extends Fragment {
             public void buildTrackIntent(Artist artist) {
                 //explicit intent
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
-                String[] nameAndId = {artist.name, artist.id};
-                intent.putExtra(Intent.EXTRA_TEXT, nameAndId);
+                String imageUrl = "";
+                if (artist.images.size() != 0) {
+                    imageUrl = artist.images.get(0).url;
+                }
+                String[] artistInfo = {artist.name, artist.id, imageUrl};
+                intent.putExtra(Intent.EXTRA_TEXT, artistInfo);
                 startActivity(intent);
             }
         });
