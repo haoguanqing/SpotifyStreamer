@@ -62,15 +62,13 @@ public class MainActivityFragment extends Fragment {
                 mSpotifyService.searchArtists(newText, new Callback<ArtistsPager>() {
                     @Override
                     public void success(ArtistsPager artistsPager, Response response) {
+                        artistsList.clear();
                         if (artistsPager.artists.total != 0) {
-                            artistsList.clear();
                             artistsList.addAll(new ArrayList<>(artistsPager.artists.items));
-                            adapter.notifyDataSetChanged();
                         } else {
-                            artistsList.clear();
                             noResultToast();
-                            adapter.notifyDataSetChanged();
                         }
+                        adapter.notifyDataSetChanged();
                     }
 
                     @Override

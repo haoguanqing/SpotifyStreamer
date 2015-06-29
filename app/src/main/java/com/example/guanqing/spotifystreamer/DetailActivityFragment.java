@@ -84,16 +84,14 @@ public class DetailActivityFragment extends Fragment {
             }
 
             @Override
-            public void failure(RetrofitError error) {
-
-            }
+            public void failure(RetrofitError error) {}
         });
 
         trackListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //TODO: will complete in stage 2
-                Toast.makeText(getActivity(), "to be done in stage 2", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "To be done in stage 2", Toast.LENGTH_SHORT).show();
             }
         });
 
