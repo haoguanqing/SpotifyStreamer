@@ -6,8 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -54,14 +56,16 @@ public class DetailActivityFragment extends Fragment {
         final ListView trackListView = (ListView) rootView.findViewById(R.id.top_track_listView);
         final TrackAdapter adapter = new TrackAdapter(
                 getActivity(),R.layout.fragment_detail_block, trackList);
+        //set the adapter to trackListView
         trackListView.setAdapter(adapter);
 
-        String artistName = artistInfo[0];
-        String artistId = artistInfo[1];
-        String url = artistInfo[2];
+        final String artistName = artistInfo[0];
+        final String artistId = artistInfo[1];
+        final String url = artistInfo[2];
         final Map<String, Object> countryParameter = new HashMap<>();
         countryParameter.put("country", "us");
 
+        //set the thumbnail for the artist
         if (!url.isEmpty()){
             Picasso.with(getActivity()).load(url).into(imageView);
         }
@@ -85,7 +89,16 @@ public class DetailActivityFragment extends Fragment {
             }
         });
 
+        trackListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //TODO: will complete in stage 2
+                Toast.makeText(getActivity(), "to be done in stage 2", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return rootView;
     }
+
 
 }
