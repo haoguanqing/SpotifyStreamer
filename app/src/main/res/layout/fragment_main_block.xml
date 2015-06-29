@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/artist_thumbnail"
-        android:src="@drawable/cover"
         android:adjustViewBounds="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:maxWidth="96dp"
-        android:maxHeight="96dp"
+        android:maxWidth="80dp"
+        android:cropToPadding="true"
         android:scaleType="fitCenter"
-        android:alpha="0.85"/>
+        android:alpha="0.9"/>
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="108dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:minHeight="96dp"
         android:text="@string/artist_name"
         android:id="@+id/artist_name"
         android:gravity="center_vertical"
         android:layout_centerVertical="true"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/primary_dark_material_light"
         android:typeface="monospace"
+
         android:layout_toRightOf="@+id/artist_thumbnail"
+        android:layout_toEndOf="@+id/artist_thumbnail"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:alpha="0.85" />

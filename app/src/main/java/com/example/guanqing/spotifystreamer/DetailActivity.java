@@ -1,24 +1,33 @@
 package com.example.guanqing.spotifystreamer;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
 public class DetailActivity extends ActionBarActivity {
+    private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-/*        setTitle(getString(R.string.title_activity_detail));
-        getActionBar().setIcon(R.drawable.cover);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);*/
+        setTitle(getString(R.string.title_activity_detail));
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        String[] artistInfo;
+        if (getIntent()!=null){
+            artistInfo = getIntent().getStringArrayExtra(Intent.EXTRA_TEXT);
+            getSupportActionBar().setSubtitle(artistInfo[0]);
+
+        }
 
         setContentView(R.layout.activity_detail);
     }
+
+
 
 
     @Override
@@ -42,4 +51,6 @@ public class DetailActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

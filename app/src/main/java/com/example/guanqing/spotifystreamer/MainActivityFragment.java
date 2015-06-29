@@ -1,44 +1,112 @@
 package com.example.guanqing.spotifystreamer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.ArtistsPager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
+    private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
+    private SpotifyService mSpotifyService = null;
 
     public MainActivityFragment() {
+        final SpotifyApi api = new SpotifyApi();
+        mSpotifyService = api.getService();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main_search, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_main_search, container, false);
+        final SearchView searchView = (SearchView) rootView.findViewById(R.id.searchView);
+        final ListView listView = (ListView) rootView.findViewById(R.id.search_results_listView);
+        final ArrayList<Artist> artistsList = new ArrayList<>();
 
-        String[] urls = {"http://i.imgur.com/DvpvklR.png",
-                "https://i.scdn.co/image/a370c003642050eeaec0bc604409aa585ca92297",
-                "https://i.scdn.co/image/61de0bd715d34d394b95f5191ad2a4aed0059132",
-                "http://i.imgur.com/DvpvklR.png",
-                "https://i.scdn.co/image/a370c003642050eeaec0bc604409aa585ca92297",
-                "https://i.scdn.co/image/61de0bd715d34d394b95f5191ad2a4aed0059132",
-                "http://i.imgur.com/DvpvklR.png"};
+        final ArtistAdapter adapter = new ArtistAdapter(
+                getActivity(),R.layout.fragment_main_block, artistsList);
 
-        String[] names = {"Gaga", "Muse", "The Black Parade", "Linkin Park", "10 Years", "Green Day", "Olivia Ong"};
-
-        MainBlockAdapter adapter = new MainBlockAdapter(
-                getActivity(),
-                urls,
-                names
-        );
-        ListView listView = (ListView) rootView.findViewById(R.id.search_results_list);
         listView.setAdapter(adapter);
+
+        searchView.setQueryHint(getString(R.string.search_artist_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(final String newText) {
+
+
+                mSpotifyService.searchArtists(newText, new Callback<ArtistsPager>() {
+                    @Override
+                    public void success(ArtistsPager artistsPager, Response response) {
+                        artistsList.clear();
+                        if (artistsPager.artists.total != 0) {
+                            artistsList.addAll(new ArrayList<>(artistsPager.artists.items));
+                        } else {
+                            noResultToast();
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                    }
+
+                    public void noResultToast() {
+                        String text = getString(R.string.no_result_found) + newText;
+                        Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+                return true;
+            }
+        });
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Artist artist = artistsList.get(position);
+                buildTrackIntent(artist);
+            }
+
+            public void buildTrackIntent(Artist artist) {
+                //explicit intent
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                String imageUrl = "";
+                if (artist.images.size() != 0) {
+                    imageUrl = artist.images.get(0).url;
+                }
+                String[] artistInfo = {artist.name, artist.id, imageUrl};
+                intent.putExtra(Intent.EXTRA_TEXT, artistInfo);
+                startActivity(intent);
+            }
+        });
 
         return rootView;
     }
+
 }
