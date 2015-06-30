@@ -40,11 +40,33 @@ public class DetailActivityFragment extends Fragment {
         mSpotifyService = api.getService();
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current state
+        ArrayList<TrackParcel> list = new ArrayList<>();
+        for (Track track : trackList){
+            list.add(new TrackParcel(track));
+        }
+        savedInstanceState.putParcelableArrayList("key", list);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         artistInfo = getActivity().getIntent().getStringArrayExtra(Intent.EXTRA_TEXT);
 
+        //get the precious state from savedInstanceState
+        if (savedInstanceState!=null){
+            ArrayList<TrackParcel> list = savedInstanceState.getParcelableArrayList("key");
+            trackList.clear();
+            for (TrackParcel track : list){
+                trackList.add(track.getTrack());
+            }
+        }
     }
 
     @Override
@@ -69,23 +91,27 @@ public class DetailActivityFragment extends Fragment {
         if (!url.isEmpty()){
             Picasso.with(getActivity()).load(url).into(imageView);
         }
+        if (savedInstanceState==null) {
+            mSpotifyService.getArtistTopTrack(artistId, countryParameter, new Callback<Tracks>() {
+                @Override
+                public void success(Tracks tracks, Response response) {
 
-        mSpotifyService.getArtistTopTrack(artistId, countryParameter, new Callback<Tracks>() {
-            @Override
-            public void success(Tracks tracks, Response response) {
-                trackList.clear();
-                trackList.addAll(new ArrayList<>(tracks.tracks));
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-            }
+                    trackList.clear();
+                    trackList.addAll(new ArrayList<>(tracks.tracks));
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                }
 
-            @Override
-            public void failure(RetrofitError error) {}
-        });
+
+                @Override
+                public void failure(RetrofitError error) {
+                }
+            });
+        }
 
         trackListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -98,5 +124,5 @@ public class DetailActivityFragment extends Fragment {
         return rootView;
     }
 
-
 }
+
