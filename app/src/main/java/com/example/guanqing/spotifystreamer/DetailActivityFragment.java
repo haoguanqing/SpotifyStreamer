@@ -59,7 +59,7 @@ public class DetailActivityFragment extends Fragment {
         super.onCreate(savedInstanceState);
         artistInfo = getActivity().getIntent().getStringArrayExtra(Intent.EXTRA_TEXT);
 
-        //get the precious state from savedInstanceState
+        //get the previous state from savedInstanceState
         if (savedInstanceState!=null){
             ArrayList<TrackParcel> list = savedInstanceState.getParcelableArrayList("key");
             trackList.clear();
