@@ -27,7 +27,7 @@
         android:id="@+id/artist_name"
         android:gravity="center_vertical"
         android:layout_centerVertical="true"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/primary_dark_material_light"
         android:typeface="monospace"
 
