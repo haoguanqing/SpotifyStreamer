@@ -1,6 +1,5 @@
 package com.example.guanqing.spotifystreamer;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -25,11 +24,12 @@ import retrofit.client.Response;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
-    private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
+public class SearchFragment extends Fragment {
+    private final String LOG_TAG = SearchFragment.class.getSimpleName();
     private SpotifyService mSpotifyService = null;
+    ArtistSelectListener mListener;
 
-    public MainActivityFragment() {
+    public SearchFragment() {
         final SpotifyApi api = new SpotifyApi();
         mSpotifyService = api.getService();
     }
@@ -37,19 +37,19 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //get views
         final View rootView = inflater.inflate(R.layout.fragment_main_search, container, false);
         final SearchView searchView = (SearchView) rootView.findViewById(R.id.searchView);
         final ListView listView = (ListView) rootView.findViewById(R.id.search_results_listView);
         final ArrayList<Artist> artistsList = new ArrayList<>();
-
+        //create adapter and set to listview
         final ArtistAdapter adapter = new ArtistAdapter(
                 getActivity(),R.layout.fragment_main_block, artistsList);
-
         listView.setAdapter(adapter);
 
+        //dynamically define searchview
         searchView.setQueryHint(getString(R.string.search_artist_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -57,7 +57,6 @@ public class MainActivityFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(final String newText) {
-
 
                 mSpotifyService.searchArtists(newText, new Callback<ArtistsPager>() {
                     @Override
@@ -72,14 +71,12 @@ public class MainActivityFragment extends Fragment {
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
-                    }
+                    public void failure(RetrofitError error) {}
 
                     public void noResultToast() {
                         String text = getString(R.string.no_result_found) + newText;
                         Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
                     }
-
                 });
                 return true;
             }
@@ -94,19 +91,21 @@ public class MainActivityFragment extends Fragment {
             }
 
             public void buildTrackIntent(Artist artist) {
-                //explicit intent
-                Intent intent = new Intent(getActivity(), DetailActivity.class);
                 String imageUrl = "";
                 if (artist.images.size() != 0) {
                     imageUrl = artist.images.get(0).url;
                 }
                 String[] artistInfo = {artist.name, artist.id, imageUrl};
-                intent.putExtra(Intent.EXTRA_TEXT, artistInfo);
-                startActivity(intent);
+                //use ArtistSelectListener instead of building intent directly
+                ((ArtistSelectListener) getActivity()).onArtistSelected(artistInfo);
             }
         });
 
         return rootView;
+    }
+
+    public interface ArtistSelectListener {
+        public void onArtistSelected(String[] artistInfo);
     }
 
 }

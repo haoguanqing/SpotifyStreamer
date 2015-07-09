@@ -29,13 +29,15 @@ import retrofit.client.Response;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DetailActivityFragment extends Fragment {
-    private final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
+public class TopTrackFragment extends Fragment {
+    private final String LOG_TAG = TopTrackFragment.class.getSimpleName();
+    static final String ARTIST_INFO = "ARTIST_INFO";
     private SpotifyService mSpotifyService = null;
     private String[] artistInfo;
     private ArrayList<Track> trackList = new ArrayList<>();
 
-    public DetailActivityFragment() {
+
+    public TopTrackFragment() {
         final SpotifyApi api = new SpotifyApi();
         mSpotifyService = api.getService();
     }
@@ -72,54 +74,59 @@ public class DetailActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        //get views
         final View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.artist_thumbnail);
         final ListView trackListView = (ListView) rootView.findViewById(R.id.top_track_listView);
+        //create adapter
         final TrackAdapter adapter = new TrackAdapter(
                 getActivity(),R.layout.fragment_detail_block, trackList);
         //set the adapter to trackListView
         trackListView.setAdapter(adapter);
 
-        final String artistName = artistInfo[0];
-        final String artistId = artistInfo[1];
-        final String url = artistInfo[2];
         final Map<String, Object> countryParameter = new HashMap<>();
         countryParameter.put("country", "us");
 
-        //set the thumbnail for the artist
-        if (!url.isEmpty()){
-            Picasso.with(getActivity()).load(url).into(imageView);
-        }
-        if (savedInstanceState==null) {
-            mSpotifyService.getArtistTopTrack(artistId, countryParameter, new Callback<Tracks>() {
-                @Override
-                public void success(Tracks tracks, Response response) {
-
-                    trackList.clear();
-                    trackList.addAll(new ArrayList<>(tracks.tracks));
-                    getActivity().runOnUiThread(new Runnable() {
+        Bundle args = getArguments();
+        if (args!=null) {
+            artistInfo = args.getStringArray("artist_info");
+            if (artistInfo != null) {
+                final String artistName = artistInfo[0];
+                final String artistId = artistInfo[1];
+                final String artistUrl = artistInfo[2];
+                //set the thumbnail for the artist
+                if (!artistUrl.isEmpty()) {
+                    Picasso.with(getActivity()).load(artistUrl).into(imageView);
+                }
+                if (savedInstanceState == null) {
+                    mSpotifyService.getArtistTopTrack(artistId, countryParameter, new Callback<Tracks>() {
                         @Override
-                        public void run() {
-                            adapter.notifyDataSetChanged();
+                        public void success(Tracks tracks, Response response) {
+                            trackList.clear();
+                            trackList.addAll(new ArrayList<>(tracks.tracks));
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
                         }
                     });
                 }
 
-
-                @Override
-                public void failure(RetrofitError error) {
-                }
-            });
-        }
-
-        trackListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO: will complete in stage 2
-                Toast.makeText(getActivity(), "To be done in stage 2", Toast.LENGTH_SHORT).show();
+                trackListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        //TODO: will complete in stage 2
+                        Toast.makeText(getActivity(), "To be done in stage 2", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        });
+        }
 
         return rootView;
     }

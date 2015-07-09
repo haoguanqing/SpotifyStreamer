@@ -6,8 +6,10 @@
     <string name="track_name">track name</string>
     <string name="album_name">album name</string>
     <string name="track_duration">03:46</string>
+    <string name="artist_thumbnail">artist thumbnail</string>
 
-    <string name="search_artist_hint">Find the artist</string>
+
+    <string name="search_artist_hint">Find artists</string>
     <string name="no_result_found">No result found for\u0020</string>
 
     <string name="title_activity_detail">Top 10 Tracks</string>

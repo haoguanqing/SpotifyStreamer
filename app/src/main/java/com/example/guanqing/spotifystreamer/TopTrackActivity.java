@@ -7,27 +7,35 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class DetailActivity extends ActionBarActivity {
-    private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
+public class TopTrackActivity extends ActionBarActivity {
+    private final String LOG_TAG = SearchFragment.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_detail);
 
         setTitle(getString(R.string.title_activity_detail));
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        String[] artistInfo;
+        String[] artistInfo = null;
         if (getIntent()!=null){
             artistInfo = getIntent().getStringArrayExtra(Intent.EXTRA_TEXT);
             getSupportActionBar().setSubtitle(artistInfo[0]);
-
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        setContentView(R.layout.activity_detail);
+        Bundle args = new Bundle();
+        args.putStringArray(TopTrackFragment.ARTIST_INFO, artistInfo);
+
+        TopTrackFragment topTrackFragment = new TopTrackFragment();
+        topTrackFragment.setArguments(args);
+
+        if (savedInstanceState==null){
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.top_track_container, topTrackFragment)
+                    .commit();
+        }
+
     }
-
-
 
 
     @Override
@@ -51,6 +59,5 @@ public class DetailActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
 }
