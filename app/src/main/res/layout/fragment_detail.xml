@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="144dp"
         android:id="@+id/artist_thumbnail"
-
+        android:src="@drawable/blank_cd"
         android:adjustViewBounds="true"
         android:maxHeight="144dp"
         android:cropToPadding="true"
@@ -30,6 +30,7 @@
         android:id="@+id/top_track_listView"
         android:orientation="vertical"
         android:layout_width="wrap_content"
+        android:background="@color/primary_dark_material_dark"
         android:layout_height="match_parent"/>
 
 </LinearLayout>
