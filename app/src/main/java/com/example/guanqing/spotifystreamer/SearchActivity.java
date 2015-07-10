@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 
 public class SearchActivity extends ActionBarActivity implements SearchFragment.ArtistSelectListener {
-    boolean mTwoPane = false;
+    boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +26,8 @@ public class SearchActivity extends ActionBarActivity implements SearchFragment.
                 transaction.replace(R.id.top_track_container, topTrackFragment);
                 transaction.commit();
             }
+        }else{
+            mTwoPane = false;
         }
     }
 
@@ -59,8 +61,8 @@ public class SearchActivity extends ActionBarActivity implements SearchFragment.
 
     @Override
     public void onArtistSelected(String[] artistInfo) {
-        //two pane
         if (mTwoPane){
+            //two pane
             Bundle args = new Bundle();
             args.putStringArray(TopTrackFragment.ARTIST_INFO, artistInfo);
             //set arguments for fragment
@@ -68,14 +70,14 @@ public class SearchActivity extends ActionBarActivity implements SearchFragment.
             topTrackFragment.setArguments(args);
             //fragment transaction
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.top_track_container, topTrackFragment, "replace fragment");
+            transaction.replace(R.id.top_track_container, topTrackFragment);
             transaction.commit();
-            return;
+        }else{
+            //one pane
+            Intent intent = new Intent(this, TopTrackActivity.class)
+                    .putExtra(Intent.EXTRA_TEXT, artistInfo);
+            startActivity(intent);
         }
 
-        //one pane
-        Intent intent = new Intent(this, TopTrackActivity.class)
-                .putExtra(Intent.EXTRA_TEXT, artistInfo);
-        startActivity(intent);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.guanqing.spotifystreamer;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -32,6 +33,19 @@ public class SearchFragment extends Fragment {
     public SearchFragment() {
         final SpotifyApi api = new SpotifyApi();
         mSpotifyService = api.getService();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mListener = (ArtistSelectListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement ArtistSelectListener");
+        }
     }
 
     @Override
@@ -87,18 +101,16 @@ public class SearchFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Artist artist = artistsList.get(position);
-                buildTrackIntent(artist);
-            }
-
-            public void buildTrackIntent(Artist artist) {
                 String imageUrl = "";
                 if (artist.images.size() != 0) {
                     imageUrl = artist.images.get(0).url;
                 }
                 String[] artistInfo = {artist.name, artist.id, imageUrl};
                 //use ArtistSelectListener instead of building intent directly
-                ((ArtistSelectListener) getActivity()).onArtistSelected(artistInfo);
+                mListener.onArtistSelected(artistInfo);
+
             }
+
         });
 
         return rootView;

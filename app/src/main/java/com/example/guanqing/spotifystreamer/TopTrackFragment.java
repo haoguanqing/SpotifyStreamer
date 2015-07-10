@@ -59,7 +59,6 @@ public class TopTrackFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        artistInfo = getActivity().getIntent().getStringArrayExtra(Intent.EXTRA_TEXT);
 
         //get the previous state from savedInstanceState
         if (savedInstanceState!=null){
@@ -89,44 +88,47 @@ public class TopTrackFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args!=null) {
-            artistInfo = args.getStringArray("artist_info");
-            if (artistInfo != null) {
-                final String artistName = artistInfo[0];
-                final String artistId = artistInfo[1];
-                final String artistUrl = artistInfo[2];
-                //set the thumbnail for the artist
-                if (!artistUrl.isEmpty()) {
-                    Picasso.with(getActivity()).load(artistUrl).into(imageView);
-                }
-                if (savedInstanceState == null) {
-                    mSpotifyService.getArtistTopTrack(artistId, countryParameter, new Callback<Tracks>() {
-                        @Override
-                        public void success(Tracks tracks, Response response) {
-                            trackList.clear();
-                            trackList.addAll(new ArrayList<>(tracks.tracks));
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                        }
-                    });
-                }
-
-                trackListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            artistInfo = args.getStringArray(TopTrackFragment.ARTIST_INFO);
+        }else{
+            artistInfo = getActivity().getIntent().getStringArrayExtra(Intent.EXTRA_TEXT);
+        }
+        if (artistInfo != null) {
+            final String artistName = artistInfo[0];
+            final String artistId = artistInfo[1];
+            final String artistUrl = artistInfo[2];
+            //set the thumbnail for the artist
+            if (!artistUrl.isEmpty()) {
+                Picasso.with(getActivity()).load(artistUrl).into(imageView);
+            }
+            if (savedInstanceState == null) {
+                mSpotifyService.getArtistTopTrack(artistId, countryParameter, new Callback<Tracks>() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        //TODO: will complete in stage 2
-                        Toast.makeText(getActivity(), "To be done in stage 2", Toast.LENGTH_SHORT).show();
+                    public void success(Tracks tracks, Response response) {
+                        trackList.clear();
+                        trackList.addAll(new ArrayList<>(tracks.tracks));
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
                     }
                 });
             }
+
+            trackListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    //TODO: will complete in stage 2
+                    Toast.makeText(getActivity(), "To be done in stage 2", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
+
 
         return rootView;
     }
