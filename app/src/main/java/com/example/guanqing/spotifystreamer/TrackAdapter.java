@@ -56,7 +56,9 @@ public class TrackAdapter extends ArrayAdapter{
 
         //set images to ImageViews
         if (!currentTrack.album.images.isEmpty()){
-            String imageUrl = currentTrack.album.images.get(0).url;
+            int i = 1;
+            if (new SearchActivity().isTwoPane()) i=2;
+            String imageUrl = currentTrack.album.images.get(i).url;
             Picasso.with(mContext).load(imageUrl).into( viewHolder.imageView);
         } else{
             Picasso.with(mContext).load(R.drawable.blank_cd).into(viewHolder.imageView);

@@ -53,10 +53,8 @@ public class SearchActivity extends ActionBarActivity implements SearchFragment.
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
+    public boolean isTwoPane(){
+        return mTwoPane;
     }
 
     @Override
