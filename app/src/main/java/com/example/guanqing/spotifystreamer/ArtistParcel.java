@@ -7,7 +7,7 @@ import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
 
 /**
- * Created by Guanqing on 2015/6/30.
+ * Created by Guanqing on 2015/7/12.
  */
 public class ArtistParcel implements Parcelable{
     private Artist artist;

@@ -31,6 +31,7 @@ import retrofit.client.Response;
  */
 public class TopTrackFragment extends Fragment {
     private final String LOG_TAG = TopTrackFragment.class.getSimpleName();
+    static final String TRACK_PARCEL_KEY = "TRACK_PARCEL_KEY";
     static final String ARTIST_INFO = "ARTIST_INFO";
     private SpotifyService mSpotifyService = null;
     private String[] artistInfo;
@@ -50,7 +51,7 @@ public class TopTrackFragment extends Fragment {
         for (Track track : trackList){
             list.add(new TrackParcel(track));
         }
-        savedInstanceState.putParcelableArrayList("key", list);
+        savedInstanceState.putParcelableArrayList(TRACK_PARCEL_KEY, list);
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
@@ -62,7 +63,7 @@ public class TopTrackFragment extends Fragment {
 
         //get the previous state from savedInstanceState
         if (savedInstanceState!=null){
-            ArrayList<TrackParcel> list = savedInstanceState.getParcelableArrayList("key");
+            ArrayList<TrackParcel> list = savedInstanceState.getParcelableArrayList(TRACK_PARCEL_KEY);
             trackList.clear();
             for (TrackParcel track : list){
                 trackList.add(track.getTrack());
