@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="144dp"
         android:id="@+id/artist_thumbnail"
-        android:src="@drawable/blank_cd"
+
         android:adjustViewBounds="true"
         android:maxHeight="144dp"
         android:cropToPadding="true"

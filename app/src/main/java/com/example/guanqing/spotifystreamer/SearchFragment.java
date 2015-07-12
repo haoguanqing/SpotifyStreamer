@@ -31,8 +31,6 @@ public class SearchFragment extends Fragment {
     ArtistSelectListener mListener;
 
     public SearchFragment() {
-        final SpotifyApi api = new SpotifyApi();
-        mSpotifyService = api.getService();
     }
 
     @Override
@@ -51,6 +49,9 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //get spotify service
+        final SpotifyApi api = new SpotifyApi();
+        mSpotifyService = api.getService();
         //get views
         final View rootView = inflater.inflate(R.layout.fragment_main_search, container, false);
         final SearchView searchView = (SearchView) rootView.findViewById(R.id.searchView);
