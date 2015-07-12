@@ -1,4 +1,4 @@
-package com.example.guanqing.spotifystreamer;
+package com.example.guanqing.spotifystreamer.searchArtists;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,17 +7,23 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.guanqing.spotifystreamer.R;
+import com.example.guanqing.spotifystreamer.topTracks.TopTrackActivity;
+import com.example.guanqing.spotifystreamer.topTracks.TopTrackFragment;
+
 
 public class SearchActivity extends ActionBarActivity implements SearchFragment.ArtistSelectListener {
     boolean mTwoPane;
+    static final String ARTIST_INFO = "ARTIST_INFO";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (findViewById(R.id.top_track_container)!=null){
-            mTwoPane = true;
+        mTwoPane = getResources().getBoolean(R.bool.tablet_layout);
+        //if it is a tablet, use the fragment manager to conduct transaction
+        if (mTwoPane){
             if (savedInstanceState==null) {
                 //replace the fragment with the new one
                 TopTrackFragment topTrackFragment = new TopTrackFragment();
@@ -26,8 +32,6 @@ public class SearchActivity extends ActionBarActivity implements SearchFragment.
                 transaction.replace(R.id.top_track_container, topTrackFragment);
                 transaction.commit();
             }
-        }else{
-            mTwoPane = false;
         }
     }
 
@@ -53,16 +57,16 @@ public class SearchActivity extends ActionBarActivity implements SearchFragment.
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean isTwoPane(){
+/*    public boolean isTwoPane(){
         return mTwoPane;
-    }
+    }*/
 
     @Override
     public void onArtistSelected(String[] artistInfo) {
         if (mTwoPane){
             //two pane
             Bundle args = new Bundle();
-            args.putStringArray(TopTrackFragment.ARTIST_INFO, artistInfo);
+            args.putStringArray(ARTIST_INFO, artistInfo);
             //set arguments for fragment
             TopTrackFragment topTrackFragment = new TopTrackFragment();
             topTrackFragment.setArguments(args);

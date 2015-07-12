@@ -1,10 +1,13 @@
-package com.example.guanqing.spotifystreamer;
+package com.example.guanqing.spotifystreamer.topTracks;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.example.guanqing.spotifystreamer.R;
+import com.example.guanqing.spotifystreamer.searchArtists.SearchFragment;
 
 
 public class TopTrackActivity extends ActionBarActivity {

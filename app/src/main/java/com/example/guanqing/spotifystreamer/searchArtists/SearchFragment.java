@@ -1,4 +1,4 @@
-package com.example.guanqing.spotifystreamer;
+package com.example.guanqing.spotifystreamer.searchArtists;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
+
+import com.example.guanqing.spotifystreamer.R;
 
 import java.util.ArrayList;
 
@@ -115,8 +117,7 @@ public class SearchFragment extends Fragment {
                         }
 
                         @Override
-                        public void failure(RetrofitError error) {
-                        }
+                        public void failure(RetrofitError error) {}
 
                         public void noResultToast() {
                             String text = getString(R.string.no_result_found) + newText;
@@ -137,11 +138,10 @@ public class SearchFragment extends Fragment {
                     imageUrl = artist.images.get(0).url;
                 }
                 String[] artistInfo = {artist.name, artist.id, imageUrl};
-                //use ArtistSelectListener instead of building intent directly
+
+                //use ArtistSelectListener instead of directly building an intent
                 mListener.onArtistSelected(artistInfo);
-
             }
-
         });
 
         return rootView;

@@ -1,4 +1,4 @@
-package com.example.guanqing.spotifystreamer;
+package com.example.guanqing.spotifystreamer.topTracks;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.guanqing.spotifystreamer.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class TrackAdapter extends ArrayAdapter{
         //set images to ImageViews
         if (!currentTrack.album.images.isEmpty()){
             int i = 1;
-            if (new SearchActivity().isTwoPane()) i=2;
+            if (mContext.getResources().getBoolean(R.bool.tablet_layout)) i=2;
             String imageUrl = currentTrack.album.images.get(i).url;
             Picasso.with(mContext).load(imageUrl).into( viewHolder.imageView);
         } else{

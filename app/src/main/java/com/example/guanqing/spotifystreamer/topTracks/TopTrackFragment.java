@@ -1,4 +1,4 @@
-package com.example.guanqing.spotifystreamer;
+package com.example.guanqing.spotifystreamer.topTracks;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.guanqing.spotifystreamer.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -126,7 +127,10 @@ public class TopTrackFragment extends Fragment {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //TODO: will complete in stage 2
                     Toast.makeText(getActivity(), "To be done in stage 2", Toast.LENGTH_SHORT).show();
+                   // new PlayTrackActivity().showDialog();
+
                 }
+
             });
         }
 
