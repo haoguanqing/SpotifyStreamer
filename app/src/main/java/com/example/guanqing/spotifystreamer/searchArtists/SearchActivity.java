@@ -8,11 +8,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.guanqing.spotifystreamer.R;
+import com.example.guanqing.spotifystreamer.playTrack.PlayTrackFragment;
 import com.example.guanqing.spotifystreamer.topTracks.TopTrackActivity;
 import com.example.guanqing.spotifystreamer.topTracks.TopTrackFragment;
 
+import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.Track;
 
-public class SearchActivity extends ActionBarActivity implements SearchFragment.ArtistSelectListener {
+
+public class SearchActivity extends ActionBarActivity implements
+        SearchFragment.Communicator,
+        TopTrackFragment.Communicator {
     boolean mTwoPane;
     static final String ARTIST_INFO = "ARTIST_INFO";
 
@@ -62,7 +68,12 @@ public class SearchActivity extends ActionBarActivity implements SearchFragment.
     }*/
 
     @Override
-    public void onArtistSelected(String[] artistInfo) {
+    public void onArtistSelected(Artist artist) {
+        String imageUrl = "";
+        if (artist.images.size() != 0) {
+            imageUrl = artist.images.get(0).url;
+        }
+        String[] artistInfo = {artist.name, artist.id, imageUrl};
         if (mTwoPane){
             //two pane
             Bundle args = new Bundle();
@@ -80,6 +91,21 @@ public class SearchActivity extends ActionBarActivity implements SearchFragment.
                     .putExtra(Intent.EXTRA_TEXT, artistInfo);
             startActivity(intent);
         }
+    }
 
+    @Override
+    public void onTrackSelected(Track track) {
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        PlayTrackFragment fragment = new PlayTrackFragment();
+        if (mTwoPane) {
+            //show fragment as dialog on a tablet
+            fragment.show(fragmentManager, "dialog");
+        } else {
+            //show the fragment fullscreen on a device
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            transaction.add(R.id.play_track_fragment, fragment)
+                    .addToBackStack(null).commit();
+        }
     }
 }

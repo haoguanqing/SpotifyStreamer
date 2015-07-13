@@ -21,19 +21,21 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_play_track, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_play_track, container, false);
+        return rootView;
     }
 
+
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+         public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         return dialog;
     }
 
-    public interface NoticeDialogListener {
-        public void onPreviousButtonClick(android.support.v4.app.DialogFragment dialogFragment);
-        public void onPlayButtonClick(android.support.v4.app.DialogFragment dialogFragment);
-        public void onNextButtonClick(android.support.v4.app.DialogFragment dialogFragment);
-    }
+//    public interface NoticeDialogListener {
+//        public void onPreviousButtonClick(android.support.v4.app.DialogFragment dialogFragment);
+//        public void onPlayButtonClick(android.support.v4.app.DialogFragment dialogFragment);
+//        public void onNextButtonClick(android.support.v4.app.DialogFragment dialogFragment);
+//    }
 }

@@ -31,7 +31,7 @@ public class SearchFragment extends Fragment {
     private final String LOG_TAG = SearchFragment.class.getSimpleName();
     private final String ARTIST_PARCEL_KEY = "ARTIST_PARCEL_KEY";
     private SpotifyService mSpotifyService = null;
-    ArtistSelectListener mListener;
+    Communicator communicator;
     final ArrayList<Artist> artistsList = new ArrayList<>();
 
     public SearchFragment() {
@@ -70,10 +70,10 @@ public class SearchFragment extends Fragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mListener = (ArtistSelectListener) activity;
+            communicator = (Communicator) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement ArtistSelectListener");
+                    + " must implement Communicator");
         }
     }
 
@@ -81,7 +81,7 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //get spotify service
-        final SpotifyApi api = new SpotifyApi();
+        SpotifyApi api = new SpotifyApi();
         mSpotifyService = api.getService();
         //get views
         final View rootView = inflater.inflate(R.layout.fragment_main_search, container, false);
@@ -133,22 +133,17 @@ public class SearchFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Artist artist = artistsList.get(position);
-                String imageUrl = "";
-                if (artist.images.size() != 0) {
-                    imageUrl = artist.images.get(0).url;
-                }
-                String[] artistInfo = {artist.name, artist.id, imageUrl};
-
-                //use ArtistSelectListener instead of directly building an intent
-                mListener.onArtistSelected(artistInfo);
+                //use Communicator instead of directly building an intent
+                communicator.onArtistSelected(artist);
             }
         });
 
         return rootView;
     }
 
-    public interface ArtistSelectListener {
-        public void onArtistSelected(String[] artistInfo);
+
+    public interface Communicator {
+        void onArtistSelected(Artist artist);
     }
 
 }

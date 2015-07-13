@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.guanqing.spotifystreamer.R;
 import com.squareup.picasso.Picasso;
@@ -35,8 +34,8 @@ public class TopTrackFragment extends Fragment {
     static final String TRACK_PARCEL_KEY = "TRACK_PARCEL_KEY";
     static final String ARTIST_INFO = "ARTIST_INFO";
     private SpotifyService mSpotifyService = null;
-    private String[] artistInfo;
     private ArrayList<Track> trackList = new ArrayList<>();
+    private Communicator communicator;
 
 
     public TopTrackFragment() {
@@ -84,9 +83,11 @@ public class TopTrackFragment extends Fragment {
                 getActivity(),R.layout.fragment_detail_block, trackList);
         //set the adapter to trackListView
         trackListView.setAdapter(adapter);
-
+        //set the country parameters
         final Map<String, Object> countryParameter = new HashMap<>();
         countryParameter.put("country", "us");
+
+        String[] artistInfo;
 
         Bundle args = getArguments();
         if (args!=null) {
@@ -126,16 +127,24 @@ public class TopTrackFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //TODO: will complete in stage 2
-                    Toast.makeText(getActivity(), "To be done in stage 2", Toast.LENGTH_SHORT).show();
-                   // new PlayTrackActivity().showDialog();
+                    //Toast.makeText(getActivity(), "To be done in stage 2", Toast.LENGTH_SHORT).show();
+
+//                    Intent intent = new Intent(getActivity(), PlayTrackActivity.class);
+//                    startActivity(intent);
+//                    Track track = trackList.get(position);
+//                    communicator.onTrackSelected(track);
 
                 }
 
             });
+
         }
 
-
         return rootView;
+    }
+
+    public interface Communicator {
+        void onTrackSelected(Track track);
     }
 
 }
