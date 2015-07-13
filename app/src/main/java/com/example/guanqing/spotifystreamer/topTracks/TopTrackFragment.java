@@ -37,7 +37,6 @@ public class TopTrackFragment extends Fragment {
     private ArrayList<Track> trackList = new ArrayList<>();
     private Communicator communicator;
 
-
     public TopTrackFragment() {
         final SpotifyApi api = new SpotifyApi();
         mSpotifyService = api.getService();
