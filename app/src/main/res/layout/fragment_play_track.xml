@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/play_track_fragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -18,21 +18,22 @@
         android:text="@string/artist_name"
         android:id="@+id/artist_name"
         android:textColor="@color/lighter_gray"
+        android:typeface="monospace"
         android:layout_gravity="center_horizontal" />
 
     <TextView android:text="@string/album_name"
         android:id="@+id/album_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_gravity="center_horizontal" />
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
+        android:layout_height="240dp"
         android:id="@+id/track_thumbnail"
-        android:src="@drawable/cover"
+        android:src="@drawable/blank_cd"
         android:scaleType="fitCenter"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_gravity="center_horizontal"
         />
 
@@ -42,19 +43,25 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textColor="@color/lighter_gray"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:typeface="monospace"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <SeekBar
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:id="@+id/seekBar"
+        android:progressDrawable="@android:color/holo_orange_light"
+        android:maxHeight="2dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_gravity="center_horizontal" />
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_gravity="center_horizontal">
 
         <TextView
@@ -80,16 +87,17 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_gravity="center_horizontal">
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:src="@android:drawable/ic_media_previous"
             android:id="@+id/previousButton" />
 
@@ -105,6 +113,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@android:drawable/ic_media_next"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:id="@+id/nextButton" />
     </LinearLayout>
 
