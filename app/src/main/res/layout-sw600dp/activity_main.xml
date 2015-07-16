@@ -24,5 +24,4 @@
         android:background="@color/primary_dark_material_dark"
         android:layout_weight="3" />
 
-
 </LinearLayout>

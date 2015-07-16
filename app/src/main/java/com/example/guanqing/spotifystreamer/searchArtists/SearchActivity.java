@@ -8,17 +8,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.guanqing.spotifystreamer.R;
-import com.example.guanqing.spotifystreamer.playTrack.PlayTrackFragment;
 import com.example.guanqing.spotifystreamer.topTracks.TopTrackActivity;
 import com.example.guanqing.spotifystreamer.topTracks.TopTrackFragment;
 
 import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.Track;
 
 
 public class SearchActivity extends ActionBarActivity implements
-        SearchFragment.Communicator,
-        TopTrackFragment.Communicator {
+        SearchFragment.Communicator{
     boolean mTwoPane;
     static final String ARTIST_INFO = "ARTIST_INFO";
 
@@ -33,7 +30,6 @@ public class SearchActivity extends ActionBarActivity implements
             if (savedInstanceState==null) {
                 //replace the fragment with the new one
                 TopTrackFragment topTrackFragment = new TopTrackFragment();
-                topTrackFragment.setArguments(new Bundle());
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.top_track_container, topTrackFragment);
                 transaction.commit();
@@ -67,6 +63,9 @@ public class SearchActivity extends ActionBarActivity implements
         return mTwoPane;
     }*/
 
+
+
+
     @Override
     public void onArtistSelected(Artist artist) {
         String imageUrl = "";
@@ -93,10 +92,10 @@ public class SearchActivity extends ActionBarActivity implements
         }
     }
 
-    @Override
+/*    @Override
     public void onTrackSelected(Track track) {
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        PlayTrackFragment fragment = new PlayTrackFragment();
+        PlayTrackFragment fragment = PlayTrackFragment.newInstance(track);
         if (mTwoPane) {
             //show fragment as dialog on a tablet
             fragment.show(fragmentManager, "dialog");
@@ -104,8 +103,8 @@ public class SearchActivity extends ActionBarActivity implements
             //show the fragment fullscreen on a device
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            transaction.add(R.id.play_track_fragment, fragment)
+            transaction.replace(R.id.play_track_container, fragment)
                     .addToBackStack(null).commit();
         }
-    }
+    }*/
 }

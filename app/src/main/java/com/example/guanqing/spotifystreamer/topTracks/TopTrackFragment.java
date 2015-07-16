@@ -1,5 +1,6 @@
 package com.example.guanqing.spotifystreamer.topTracks;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -42,7 +43,6 @@ public class TopTrackFragment extends Fragment {
         mSpotifyService = api.getService();
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the user's current state
@@ -67,6 +67,17 @@ public class TopTrackFragment extends Fragment {
             for (TrackParcel track : list){
                 trackList.add(track.getTrack());
             }
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            communicator = (Communicator) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement Communicator");
         }
     }
 
@@ -130,15 +141,11 @@ public class TopTrackFragment extends Fragment {
 
 //                    Intent intent = new Intent(getActivity(), PlayTrackActivity.class);
 //                    startActivity(intent);
-//                    Track track = trackList.get(position);
-//                    communicator.onTrackSelected(track);
-
+                    Track track = trackList.get(position);
+                    communicator.onTrackSelected(track);
                 }
-
             });
-
         }
-
         return rootView;
     }
 
