@@ -142,7 +142,7 @@ public class TopTrackFragment extends Fragment {
 //                    Intent intent = new Intent(getActivity(), PlayTrackActivity.class);
 //                    startActivity(intent);
                     Track track = trackList.get(position);
-                    communicator.onTrackSelected(track);
+                    communicator.onTrackSelected(track.id);
                 }
             });
         }
@@ -150,7 +150,7 @@ public class TopTrackFragment extends Fragment {
     }
 
     public interface Communicator {
-        void onTrackSelected(Track track);
+        void onTrackSelected(String trackId);
     }
 
 }

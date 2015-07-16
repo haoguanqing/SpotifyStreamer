@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.guanqing.spotifystreamer.R;
+import com.example.guanqing.spotifystreamer.playTrack.PlayTrackFragment;
 import com.example.guanqing.spotifystreamer.topTracks.TopTrackActivity;
 import com.example.guanqing.spotifystreamer.topTracks.TopTrackFragment;
 
@@ -15,7 +16,8 @@ import kaaes.spotify.webapi.android.models.Artist;
 
 
 public class SearchActivity extends ActionBarActivity implements
-        SearchFragment.Communicator{
+        SearchFragment.Communicator,
+        TopTrackFragment.Communicator{
     boolean mTwoPane;
     static final String ARTIST_INFO = "ARTIST_INFO";
 
@@ -92,19 +94,13 @@ public class SearchActivity extends ActionBarActivity implements
         }
     }
 
-/*    @Override
-    public void onTrackSelected(Track track) {
+    @Override
+    public void onTrackSelected(String trackId) {
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        PlayTrackFragment fragment = PlayTrackFragment.newInstance(track);
-        if (mTwoPane) {
+        PlayTrackFragment fragment = PlayTrackFragment.newInstance(trackId);
+
             //show fragment as dialog on a tablet
             fragment.show(fragmentManager, "dialog");
-        } else {
-            //show the fragment fullscreen on a device
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            transaction.replace(R.id.play_track_container, fragment)
-                    .addToBackStack(null).commit();
-        }
-    }*/
+
+    }
 }
