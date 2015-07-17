@@ -98,9 +98,8 @@ public class SearchActivity extends ActionBarActivity implements
     public void onTrackSelected(String trackId) {
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         PlayTrackFragment fragment = PlayTrackFragment.newInstance(trackId);
-
-            //show fragment as dialog on a tablet
-            fragment.show(fragmentManager, "dialog");
+        //show fragment as dialog on a tablet
+        fragment.show(fragmentManager, "dialog");
 
     }
 }

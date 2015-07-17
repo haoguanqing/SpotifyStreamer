@@ -129,6 +129,7 @@ public class SearchFragment extends Fragment {
             });
         }
 
+        //start top track activity on click
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -141,7 +142,7 @@ public class SearchFragment extends Fragment {
         return rootView;
     }
 
-
+    //interface to implement
     public interface Communicator {
         void onArtistSelected(Artist artist);
     }

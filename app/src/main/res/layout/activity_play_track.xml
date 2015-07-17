@@ -1,13 +1,7 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:name="com.example.guanqing.spotifystreamer.playTrack.PlayTrackFragment"
+    android:name="com.example.guanqing.spotifystreamer.PlayTrackFragment"
     tools:layout="@layout/fragment_play_track"
+    android:id="@+id/play_track_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/play_track_container"></FrameLayout>
-
-</RelativeLayout>
+    android:layout_height="match_parent" />

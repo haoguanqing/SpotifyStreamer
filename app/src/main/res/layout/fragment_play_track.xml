@@ -71,7 +71,7 @@
             android:text="@string/start_time"
             android:layout_weight="1"
             android:paddingLeft="8dp"
-            android:id="@+id/startTimeTextView" />
+            android:id="@+id/current_time" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -80,7 +80,7 @@
             android:text="@string/end_time"
             android:layout_weight="1"
             android:paddingRight="8dp"
-            android:id="@+id/endTimeTextView"
+            android:id="@+id/total_time"
             android:gravity="right" />
 
     </LinearLayout>

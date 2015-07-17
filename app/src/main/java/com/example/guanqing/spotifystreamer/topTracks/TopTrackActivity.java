@@ -2,12 +2,13 @@ package com.example.guanqing.spotifystreamer.topTracks;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.guanqing.spotifystreamer.R;
-import com.example.guanqing.spotifystreamer.playTrack.PlayTrackActivity;
 import com.example.guanqing.spotifystreamer.playTrack.PlayTrackFragment;
 import com.example.guanqing.spotifystreamer.searchArtists.SearchFragment;
 
@@ -30,7 +31,6 @@ public class TopTrackActivity extends ActionBarActivity implements TopTrackFragm
 
         Bundle args = new Bundle();
         args.putStringArray(TopTrackFragment.ARTIST_INFO, artistInfo);
-
         TopTrackFragment topTrackFragment = new TopTrackFragment();
         topTrackFragment.setArguments(args);
 
@@ -69,15 +69,22 @@ public class TopTrackActivity extends ActionBarActivity implements TopTrackFragm
     public void onTrackSelected(String trackId) {
         //show the fragment fullscreen on a device
 
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        PlayTrackFragment fragment = PlayTrackFragment.newInstance(trackId);
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.add(R.id.play_track_container, fragment)
+                .addToBackStack(null).commit();
+
+//        Intent intent = new Intent(this, PlayTrackActivity.class);
+//        intent.putExtra(PlayTrackFragment.TRACK_ID_KEY, trackId);
+//        startActivity(intent);
+        Log.i("HGQ", "TopTrackActivity onTrackSelected");
+
 //        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 //        PlayTrackFragment fragment = PlayTrackFragment.newInstance(trackId);
-//        FragmentTransaction transaction = fragmentManager.beginTransaction();
-//        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//        transaction.add(R.id.top_track_container, fragment)
-//                .addToBackStack(null).commit();
-        Intent intent = new Intent(this, PlayTrackActivity.class);
-        intent.putExtra(PlayTrackFragment.TRACK_ID_KEY, trackId);
-        startActivity(intent);
+//        //show fragment as dialog on a tablet
+//        fragment.show(fragmentManager, "dialog");
     }
 }
 
