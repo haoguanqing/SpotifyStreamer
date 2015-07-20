@@ -87,6 +87,7 @@ public class SearchFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_main_search, container, false);
         final SearchView searchView = (SearchView) rootView.findViewById(R.id.searchView);
         final ListView listView = (ListView) rootView.findViewById(R.id.search_results_listView);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         //create adapter and set to listview
         final ArtistAdapter adapter = new ArtistAdapter(
@@ -136,6 +137,7 @@ public class SearchFragment extends Fragment {
                 Artist artist = artistsList.get(position);
                 //use Communicator instead of directly building an intent
                 communicator.onArtistSelected(artist);
+                listView.setItemChecked(position, true);
             }
         });
 

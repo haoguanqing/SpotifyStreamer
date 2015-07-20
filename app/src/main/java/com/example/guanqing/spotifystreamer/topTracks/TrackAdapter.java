@@ -93,10 +93,10 @@ public class TrackAdapter extends ArrayAdapter{
 
         //set different background colors for different blocks.
         // easier to extinguish
-        if (position % 2==1){
-            blockView.setBackgroundResource(R.color.customize_gray);
-        } else {
-            blockView.setBackgroundResource(R.color.primary_dark_material_dark);
+        if (position % 2 == 1){
+            blockView.setBackgroundResource(R.drawable.selector2);
+        }else {
+            blockView.setBackgroundResource(R.drawable.selector);
         }
 
         return blockView;

@@ -61,13 +61,8 @@ public class SearchActivity extends ActionBarActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-/*    public boolean isTwoPane(){
-        return mTwoPane;
-    }*/
 
-
-
-
+    //implement interfaces
     @Override
     public void onArtistSelected(Artist artist) {
         String imageUrl = "";

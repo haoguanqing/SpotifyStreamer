@@ -88,6 +88,7 @@ public class TopTrackFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.artist_thumbnail);
         final ListView trackListView = (ListView) rootView.findViewById(R.id.top_track_listView);
+        trackListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         //create adapter
         final TrackAdapter adapter = new TrackAdapter(
                 getActivity(),R.layout.fragment_detail_block, trackList);
@@ -136,13 +137,9 @@ public class TopTrackFragment extends Fragment {
             trackListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    //TODO: will complete in stage 2
-                    //Toast.makeText(getActivity(), "To be done in stage 2", Toast.LENGTH_SHORT).show();
-
-//                    Intent intent = new Intent(getActivity(), PlayTrackActivity.class);
-//                    startActivity(intent);
                     Track track = trackList.get(position);
                     communicator.onTrackSelected(track.id);
+                    trackListView.setItemChecked(position, true);
                 }
             });
         }
