@@ -63,7 +63,11 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         super.onResume();
         if (getDialog() == null)
             return;
-        getDialog().getWindow().setLayout(386, 544);
+        if (getResources().getConfiguration().orientation==1){
+            getDialog().getWindow().setLayout(386, 544);
+        }else{
+            getDialog().getWindow().setLayout(556, 394);
+        }
     }
 
     //    public interface NoticeDialogListener {
