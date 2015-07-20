@@ -43,6 +43,7 @@ public class TrackAdapter extends ArrayAdapter{
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             //inflate the block
             blockView = inflater.inflate(res, null, false);
+
             //set the viewHolder
             viewHolder.imageView = (ImageView) blockView.findViewById(R.id.album_thumbnail);
             viewHolder.albumNameTextView = (TextView) blockView.findViewById(R.id.album_name);
@@ -90,11 +91,12 @@ public class TrackAdapter extends ArrayAdapter{
         String duration = getFormattedDuration(currentTrack.duration_ms);
         viewHolder.durationTextView.setText(duration);
 
-
         //set different background colors for different blocks.
         // easier to extinguish
         if (position % 2==1){
             blockView.setBackgroundResource(R.color.customize_gray);
+        } else {
+            blockView.setBackgroundResource(R.color.primary_dark_material_dark);
         }
 
         return blockView;

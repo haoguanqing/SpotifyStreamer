@@ -13,6 +13,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:maxWidth="80dp"
+        android:src="@drawable/blank_cd"
         android:cropToPadding="true"
         android:scaleType="fitCenter"
         android:alpha="0.9"/>
@@ -29,7 +30,6 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/primary_dark_material_light"
         android:typeface="monospace"
-
         android:layout_toRightOf="@+id/artist_thumbnail"
         android:layout_toEndOf="@+id/artist_thumbnail"
         android:layout_marginLeft="20dp"

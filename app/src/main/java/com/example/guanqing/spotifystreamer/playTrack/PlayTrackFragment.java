@@ -35,13 +35,19 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_play_track, container, false);
-        final TextView artistName = (TextView) rootView.findViewById(R.id.artist_name);
-        final TextView albumName = (TextView) rootView.findViewById(R.id.album_name);
-        final ImageView trackThumbnail = (ImageView) rootView.findViewById(R.id.track_thumbnail);
-        final TextView trackName = (TextView) rootView.findViewById(R.id.track_name);
-        final SeekBar seekBar = (SeekBar) rootView.findViewById(R.id.seekBar);
-        final TextView currentTime = (TextView) rootView.findViewById(R.id.current_time);
-        final TextView totalTime = (TextView) rootView.findViewById(R.id.current_time);
+        Bundle args = getArguments();
+        String trackId = "";
+        if (args!=null){
+            trackId = args.getString(TRACK_ID_KEY);
+        }
+        ViewHolder viewHolder = new ViewHolder();
+        viewHolder.artistName = (TextView) rootView.findViewById(R.id.artist_name);
+        viewHolder.albumName = (TextView) rootView.findViewById(R.id.album_name);
+        viewHolder.trackThumbnail = (ImageView) rootView.findViewById(R.id.track_thumbnail);
+        viewHolder.trackName = (TextView) rootView.findViewById(R.id.track_name);
+        viewHolder.seekBar = (SeekBar) rootView.findViewById(R.id.seekBar);
+        viewHolder.currentTime = (TextView) rootView.findViewById(R.id.current_time);
+        viewHolder.totalTime = (TextView) rootView.findViewById(R.id.current_time);
         return rootView;
     }
 
@@ -52,14 +58,28 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         return dialog;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getDialog() == null)
+            return;
+        getDialog().getWindow().setLayout(386, 544);
+    }
 
-
-
-
-
-//    public interface NoticeDialogListener {
+    //    public interface NoticeDialogListener {
 //        public void onPreviousButtonClick(android.support.v4.app.DialogFragment dialogFragment);
 //        public void onPlayButtonClick(android.support.v4.app.DialogFragment dialogFragment);
 //        public void onNextButtonClick(android.support.v4.app.DialogFragment dialogFragment);
 //    }
+
+    private class ViewHolder {
+        //hold a collection of views
+        ImageView trackThumbnail;
+        TextView artistName;
+        TextView albumName;
+        TextView trackName;
+        SeekBar seekBar;
+        TextView currentTime;
+        TextView totalTime;
+    }
 }

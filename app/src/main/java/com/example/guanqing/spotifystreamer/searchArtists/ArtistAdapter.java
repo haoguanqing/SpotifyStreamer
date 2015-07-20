@@ -40,9 +40,11 @@ public class ArtistAdapter extends ArrayAdapter<Artist>{
             blockView = convertView;
         }else{
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            //inflate the view
             blockView = inflater.inflate(layoutResource, null);
             viewHolder.imageView = (ImageView) blockView.findViewById(R.id.artist_thumbnail);
             viewHolder.textView = (TextView) blockView.findViewById(R.id.artist_name);
+
             //set tag for the blockView
             blockView.setTag(R.id.artist_blockview_tag, viewHolder);
         }
@@ -62,11 +64,12 @@ public class ArtistAdapter extends ArrayAdapter<Artist>{
         String artistName = currentArtist.name;
         viewHolder.textView.setText(artistName);
 
-
         //set different background colors for different blocks.
         // easier to extinguish
-        if (position % 2==1){
+        if (position % 2 == 1){
             blockView.setBackgroundResource(R.color.customize_gray);
+        }else {
+            blockView.setBackgroundResource(R.color.primary_dark_material_dark);
         }
 
         return blockView;
