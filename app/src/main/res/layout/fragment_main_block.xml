@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -13,7 +12,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:maxWidth="80dp"
+        android:src="@drawable/blank_cd"
         android:cropToPadding="true"
         android:scaleType="fitCenter"
         android:alpha="0.9"/>
@@ -27,15 +28,13 @@
         android:id="@+id/artist_name"
         android:gravity="center_vertical"
         android:layout_centerVertical="true"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/primary_dark_material_light"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/lighter_gray"
         android:typeface="monospace"
-
         android:layout_toRightOf="@+id/artist_thumbnail"
         android:layout_toEndOf="@+id/artist_thumbnail"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:alpha="0.85" />
-
 
 </RelativeLayout>

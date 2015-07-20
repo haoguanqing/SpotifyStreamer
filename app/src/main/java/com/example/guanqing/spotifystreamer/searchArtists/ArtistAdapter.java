@@ -1,4 +1,4 @@
-package com.example.guanqing.spotifystreamer;
+package com.example.guanqing.spotifystreamer.searchArtists;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.guanqing.spotifystreamer.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -39,9 +40,11 @@ public class ArtistAdapter extends ArrayAdapter<Artist>{
             blockView = convertView;
         }else{
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            //inflate the view
             blockView = inflater.inflate(layoutResource, null);
             viewHolder.imageView = (ImageView) blockView.findViewById(R.id.artist_thumbnail);
             viewHolder.textView = (TextView) blockView.findViewById(R.id.artist_name);
+
             //set tag for the blockView
             blockView.setTag(R.id.artist_blockview_tag, viewHolder);
         }
@@ -51,7 +54,7 @@ public class ArtistAdapter extends ArrayAdapter<Artist>{
 
         //set images to ImageViews
         if (!currentArtist.images.isEmpty()){
-            String imageUrl = currentArtist.images.get(0).url;
+            String imageUrl = currentArtist.images.get(1).url;
             Picasso.with(mContext).load(imageUrl).into(viewHolder.imageView);
         } else{
             Picasso.with(mContext).load(R.drawable.blank_cd).into(viewHolder.imageView);
@@ -61,11 +64,12 @@ public class ArtistAdapter extends ArrayAdapter<Artist>{
         String artistName = currentArtist.name;
         viewHolder.textView.setText(artistName);
 
-
         //set different background colors for different blocks.
         // easier to extinguish
-        if (position % 2==1){
-            blockView.setBackgroundResource(R.color.customize_gray);
+        if (position % 2 == 1){
+            blockView.setBackgroundResource(R.drawable.selector2);
+        }else {
+            blockView.setBackgroundResource(R.drawable.selector);
         }
 
         return blockView;

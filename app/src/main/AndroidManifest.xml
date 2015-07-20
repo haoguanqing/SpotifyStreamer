@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.guanqing.spotifystreamer" >
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -10,10 +10,9 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".searchArtists.SearchActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTop"
->
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,12 +20,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DetailActivity"
+            android:name=".topTracks.TopTrackActivity"
             android:label="@string/title_activity_detail"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".searchArtists.SearchActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.guanqing.spotifystreamer.MainActivity" />
+                android:value=".searchArtists.SearchActivity" />
+        </activity>
+        <activity
+            android:name=".playTrack.PlayTrackActivity"
+            android:label="@string/title_activity_play_track"
+            android:parentActivityName=".topTracks.TopTrackActivity"
+>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".topTracks.TopTrackActivity" />
         </activity>
     </application>
 

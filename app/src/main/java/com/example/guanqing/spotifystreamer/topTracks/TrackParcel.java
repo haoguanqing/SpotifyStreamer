@@ -1,4 +1,4 @@
-package com.example.guanqing.spotifystreamer;
+package com.example.guanqing.spotifystreamer.topTracks;
 
 import android.os.Parcel;
 import android.os.Parcelable;

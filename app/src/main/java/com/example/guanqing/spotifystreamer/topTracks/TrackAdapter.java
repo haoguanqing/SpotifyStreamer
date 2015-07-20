@@ -1,4 +1,4 @@
-package com.example.guanqing.spotifystreamer;
+package com.example.guanqing.spotifystreamer.topTracks;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.guanqing.spotifystreamer.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -41,7 +42,8 @@ public class TrackAdapter extends ArrayAdapter{
         } else{
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             //inflate the block
-            blockView = inflater.inflate(res, null);
+            blockView = inflater.inflate(res, null, false);
+
             //set the viewHolder
             viewHolder.imageView = (ImageView) blockView.findViewById(R.id.album_thumbnail);
             viewHolder.albumNameTextView = (TextView) blockView.findViewById(R.id.album_name);
@@ -56,7 +58,9 @@ public class TrackAdapter extends ArrayAdapter{
 
         //set images to ImageViews
         if (!currentTrack.album.images.isEmpty()){
-            String imageUrl = currentTrack.album.images.get(0).url;
+            int i = 1;
+            if (mContext.getResources().getBoolean(R.bool.tablet_layout)) i=2;
+            String imageUrl = currentTrack.album.images.get(i).url;
             Picasso.with(mContext).load(imageUrl).into( viewHolder.imageView);
         } else{
             Picasso.with(mContext).load(R.drawable.blank_cd).into(viewHolder.imageView);
@@ -87,11 +91,12 @@ public class TrackAdapter extends ArrayAdapter{
         String duration = getFormattedDuration(currentTrack.duration_ms);
         viewHolder.durationTextView.setText(duration);
 
-
         //set different background colors for different blocks.
         // easier to extinguish
-        if (position % 2==1){
-            blockView.setBackgroundResource(R.color.customize_gray);
+        if (position % 2 == 1){
+            blockView.setBackgroundResource(R.drawable.selector2);
+        }else {
+            blockView.setBackgroundResource(R.drawable.selector);
         }
 
         return blockView;
