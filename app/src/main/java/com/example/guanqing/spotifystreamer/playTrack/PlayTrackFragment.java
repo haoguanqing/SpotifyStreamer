@@ -47,7 +47,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         viewHolder.trackName = (TextView) rootView.findViewById(R.id.track_name);
         viewHolder.seekBar = (SeekBar) rootView.findViewById(R.id.seekBar);
         viewHolder.currentTime = (TextView) rootView.findViewById(R.id.current_time);
-        viewHolder.totalTime = (TextView) rootView.findViewById(R.id.current_time);
+        viewHolder.totalTime = (TextView) rootView.findViewById(R.id.total_time);
         return rootView;
     }
 
@@ -64,7 +64,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         if (getDialog() == null)
             return;
         if (getResources().getConfiguration().orientation==1){
-            getDialog().getWindow().setLayout(386, 544);
+            getDialog().getWindow().setLayout(386, 556);
         }else{
             getDialog().getWindow().setLayout(556, 394);
         }

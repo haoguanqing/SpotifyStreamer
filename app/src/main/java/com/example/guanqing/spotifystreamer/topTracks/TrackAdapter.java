@@ -53,15 +53,19 @@ public class TrackAdapter extends ArrayAdapter{
             blockView.setTag(R.id.top_track_blockbiew_tag, viewHolder);
         }
 
-
         Track currentTrack = trackList.get(position);
 
         //set images to ImageViews
         if (!currentTrack.album.images.isEmpty()){
-            int i = 1;
-            if (mContext.getResources().getBoolean(R.bool.tablet_layout)) i=2;
-            String imageUrl = currentTrack.album.images.get(i).url;
-            Picasso.with(mContext).load(imageUrl).into( viewHolder.imageView);
+            String imageUrl;
+            //use small image if possible
+            int len = currentTrack.album.images.size()-1;
+            if(len>=2){
+                imageUrl = currentTrack.album.images.get(2).url;
+            }else{
+                imageUrl = currentTrack.album.images.get(len).url;
+            }
+            Picasso.with(mContext).load(imageUrl).into(viewHolder.imageView);
         } else{
             Picasso.with(mContext).load(R.drawable.blank_cd).into(viewHolder.imageView);
         }
@@ -121,7 +125,7 @@ public class TrackAdapter extends ArrayAdapter{
         if(sec==0) {
             second = "00";
         }else if (sec<10){
-                second = "0"+sec;
+            second = "0"+sec;
         }
         return minute+":"+second;
     }

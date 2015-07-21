@@ -64,7 +64,6 @@
         android:id="@+id/track_thumbnail"
         android:src="@drawable/blank_cd"
         android:scaleType="centerCrop"
-        android:alpha="0.95"
         android:layout_gravity="center_horizontal"
         />
 
