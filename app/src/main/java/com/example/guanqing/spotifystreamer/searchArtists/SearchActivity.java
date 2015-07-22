@@ -4,20 +4,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.guanqing.spotifystreamer.R;
 import com.example.guanqing.spotifystreamer.playTrack.PlayTrackFragment;
+import com.example.guanqing.spotifystreamer.service.PlayMediaService;
 import com.example.guanqing.spotifystreamer.topTracks.TopTrackActivity;
 import com.example.guanqing.spotifystreamer.topTracks.TopTrackFragment;
 
+import java.util.ArrayList;
+
 import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.Track;
 
 
 public class SearchActivity extends ActionBarActivity implements
         SearchFragment.Communicator,
         TopTrackFragment.Communicator{
+    private static final String LOG_TAG = SearchActivity.class.getSimpleName();
     boolean mTwoPane;
     static final String ARTIST_INFO = "ARTIST_INFO";
 
@@ -90,11 +96,22 @@ public class SearchActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void onTrackSelected(String trackId) {
+    public void onTrackSelected(ArrayList<Track> trackList, int position) {
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        PlayTrackFragment fragment = PlayTrackFragment.newInstance(trackId);
+        PlayTrackFragment fragment = PlayTrackFragment.newInstance(trackList, position);
         //show fragment as dialog on a tablet
         fragment.show(fragmentManager, "dialog");
+        Log.i(LOG_TAG, "HGQ: finish onTrackSelected with position = " + position);
+        Log.i(LOG_TAG, "HGQ: track list as below:\n"+trackListString(trackList));
 
+        PlayMediaService.setTrackList(this, trackList);
+    }
+
+    public static String trackListString(ArrayList<Track> trackList) {
+        String x = "";
+        for (Track track: trackList){
+            x += track.name + "\n";
+        }
+        return x;
     }
 }

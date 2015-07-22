@@ -137,8 +137,9 @@ public class TopTrackFragment extends Fragment {
             trackListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Track track = trackList.get(position);
-                    communicator.onTrackSelected(track.id);
+//                    Track track = trackList.get(position);
+//                    communicator.onTrackSelected(track.id);
+                    communicator.onTrackSelected(trackList, position);
                     trackListView.setItemChecked(position, true);
                 }
             });
@@ -147,7 +148,7 @@ public class TopTrackFragment extends Fragment {
     }
 
     public interface Communicator {
-        void onTrackSelected(String trackId);
+        void onTrackSelected(ArrayList<Track> trackList, int position);
     }
 
 }

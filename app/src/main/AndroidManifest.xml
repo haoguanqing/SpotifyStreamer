@@ -30,12 +30,13 @@
         <activity
             android:name=".playTrack.PlayTrackActivity"
             android:label="@string/title_activity_play_track"
-            android:parentActivityName=".topTracks.TopTrackActivity"
->
+            android:parentActivityName=".topTracks.TopTrackActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".topTracks.TopTrackActivity" />
         </activity>
+
+        <service android:name=".service.PlayMediaService"/>
     </application>
 
 </manifest>
