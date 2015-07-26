@@ -12,6 +12,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.guanqing.spotifystreamer.R;
+import com.example.guanqing.spotifystreamer.service.Utility;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,7 @@ public class SearchFragment extends Fragment {
     private final String ARTIST_PARCEL_KEY = "ARTIST_PARCEL_KEY";
     private SpotifyService mSpotifyService = null;
     Communicator communicator;
-    final ArrayList<Artist> artistsList = new ArrayList<>();
+    private ArrayList<Artist> artistsList = new ArrayList<>();
 
     public SearchFragment() {
     }
@@ -40,10 +41,7 @@ public class SearchFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         // Save the user's current state
-        ArrayList<ArtistParcel> list = new ArrayList<>();
-        for (Artist artist : artistsList){
-            list.add(new ArtistParcel(artist));
-        }
+        ArrayList<ArtistParcel> list = Utility.getArtistsParcelList(artistsList);
         outState.putParcelableArrayList(ARTIST_PARCEL_KEY, list);
 
         // Always call the superclass so it can save the view hierarchy state
@@ -53,13 +51,11 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //get the saved state so as to avoid redo the keyword searching on create view
+        //get the saved state so as to avoid redo the searching on create view
         if (savedInstanceState!=null){
             artistsList.clear();
             ArrayList<ArtistParcel> list = savedInstanceState.getParcelableArrayList(ARTIST_PARCEL_KEY);
-            for (ArtistParcel parcel: list){
-                artistsList.add(parcel.getArtist());
-            }
+            artistsList = Utility.getArtistsList(list);
             savedInstanceState.clear();
         }
     }

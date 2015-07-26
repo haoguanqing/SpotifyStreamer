@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.guanqing.spotifystreamer.R;
+import com.example.guanqing.spotifystreamer.service.Utility;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -37,31 +38,34 @@ public class TrackAdapter extends ArrayAdapter{
         ViewHolder viewHolder = new ViewHolder();
 
         if (convertView!=null){
-            viewHolder = (ViewHolder) convertView.getTag(R.id.top_track_blockbiew_tag);
+            viewHolder = (ViewHolder) convertView.getTag(R.id.top_track_blockview_tag);
             blockView = convertView;
         } else{
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             //inflate the block
             blockView = inflater.inflate(res, null, false);
-
             //set the viewHolder
             viewHolder.imageView = (ImageView) blockView.findViewById(R.id.album_thumbnail);
             viewHolder.albumNameTextView = (TextView) blockView.findViewById(R.id.album_name);
             viewHolder.trackNameTextView = (TextView) blockView.findViewById(R.id.track_name);
             viewHolder.durationTextView = (TextView) blockView.findViewById(R.id.track_duration);
-
-            blockView.setTag(R.id.top_track_blockbiew_tag, viewHolder);
+            //set tag
+            blockView.setTag(R.id.top_track_blockview_tag, viewHolder);
         }
-
 
         Track currentTrack = trackList.get(position);
 
         //set images to ImageViews
         if (!currentTrack.album.images.isEmpty()){
-            int i = 1;
-            if (mContext.getResources().getBoolean(R.bool.tablet_layout)) i=2;
-            String imageUrl = currentTrack.album.images.get(i).url;
-            Picasso.with(mContext).load(imageUrl).into( viewHolder.imageView);
+            String imageUrl;
+            //use small image if possible
+            int len = currentTrack.album.images.size()-1;
+            if(len>=2){
+                imageUrl = currentTrack.album.images.get(1).url;
+            }else{
+                imageUrl = currentTrack.album.images.get(len).url;
+            }
+            Picasso.with(mContext).load(imageUrl).into(viewHolder.imageView);
         } else{
             Picasso.with(mContext).load(R.drawable.blank_cd).into(viewHolder.imageView);
         }
@@ -88,7 +92,7 @@ public class TrackAdapter extends ArrayAdapter{
         }
         viewHolder.albumNameTextView.setText(albumName);
 
-        String duration = getFormattedDuration(currentTrack.duration_ms);
+        String duration = Utility.getFormattedDuration(currentTrack.duration_ms);
         viewHolder.durationTextView.setText(duration);
 
         //set different background colors for different blocks.
@@ -100,30 +104,6 @@ public class TrackAdapter extends ArrayAdapter{
         }
 
         return blockView;
-    }
-
-
-    //parse long track_duration (192000) into formatted String (03:12)
-    private String getFormattedDuration(long dur_ms){
-        Long dur = dur_ms;
-        int totalSec = dur.intValue()/1000;
-        int min = totalSec/60;
-        int sec = totalSec - min * 60;
-        String minute = min+"";
-        String second = sec+"";
-
-        if (min==0){
-            minute = "00";
-        } else if (min<10){
-            minute = "0"+min;
-        }
-
-        if(sec==0) {
-            second = "00";
-        }else if (sec<10){
-                second = "0"+sec;
-        }
-        return minute+":"+second;
     }
 
     private class ViewHolder {

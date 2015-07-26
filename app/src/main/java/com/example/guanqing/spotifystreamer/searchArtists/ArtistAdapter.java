@@ -54,7 +54,14 @@ public class ArtistAdapter extends ArrayAdapter<Artist>{
 
         //set images to ImageViews
         if (!currentArtist.images.isEmpty()){
-            String imageUrl = currentArtist.images.get(1).url;
+            //use small image if possible
+            int len =  currentArtist.images.size()-1;
+            String imageUrl;
+            if (len>=2){
+                imageUrl = currentArtist.images.get(2).url;
+            } else{
+                imageUrl = currentArtist.images.get(len).url;
+            }
             Picasso.with(mContext).load(imageUrl).into(viewHolder.imageView);
         } else{
             Picasso.with(mContext).load(R.drawable.blank_cd).into(viewHolder.imageView);

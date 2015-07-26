@@ -12,48 +12,63 @@
 
     tools:context="com.example.guanqing.spotifystreamer.playTrack.PlayTrackFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/artist_name"
-        android:id="@+id/artist_name"
-        android:textColor="@color/lighter_gray"
-        android:typeface="monospace"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_gravity="center_horizontal" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="8dp"
+        android:layout_width="480dp"
+        android:layout_height="wrap_content">
 
-    <TextView android:text="@string/album_name"
-        android:id="@+id/album_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:textColor="@color/material_blue_grey_800"
-        android:layout_gravity="center_horizontal" />
+        <TextView android:text="@string/track_name"
+            android:id="@+id/track_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/lighter_gray"
+            android:typeface="monospace"
+            android:textSize="32sp"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingLeft="128dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView android:text="@string/album_name"
+                android:id="@+id/album_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/material_blue_grey_800"
+                android:layout_gravity="left" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/artist_name"
+                android:id="@+id/artist_name"
+                android:textColor="@color/material_blue_grey_800"
+                android:typeface="monospace"
+                android:layout_gravity="left" />
+
+        </LinearLayout>
+    </LinearLayout>
+
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="240dp"
+        android:layout_width="480dp"
+        android:layout_height="168dp"
         android:id="@+id/track_thumbnail"
         android:src="@drawable/blank_cd"
         android:scaleType="centerCrop"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_gravity="center_horizontal"
         />
 
-    <TextView android:text="@string/track_name"
-        android:id="@+id/track_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/lighter_gray"
-        android:typeface="monospace"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
-
     <SeekBar
-        android:layout_width="320dp"
+        android:layout_width="480dp"
         android:layout_height="wrap_content"
         android:id="@+id/seekBar"
         android:progressDrawable="@android:color/holo_orange_light"
@@ -64,11 +79,10 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="320dp"
+        android:layout_width="480dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_gravity="center_horizontal">
 
         <TextView
@@ -96,7 +110,7 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="320dp"
+        android:layout_width="480dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"

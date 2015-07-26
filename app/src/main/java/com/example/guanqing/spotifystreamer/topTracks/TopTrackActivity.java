@@ -10,6 +10,12 @@ import com.example.guanqing.spotifystreamer.R;
 import com.example.guanqing.spotifystreamer.playTrack.PlayTrackActivity;
 import com.example.guanqing.spotifystreamer.playTrack.PlayTrackFragment;
 import com.example.guanqing.spotifystreamer.searchArtists.SearchFragment;
+import com.example.guanqing.spotifystreamer.service.PlayMediaService;
+import com.example.guanqing.spotifystreamer.service.Utility;
+
+import java.util.ArrayList;
+
+import kaaes.spotify.webapi.android.models.Track;
 
 
 public class TopTrackActivity extends ActionBarActivity implements TopTrackFragment.Communicator{
@@ -65,21 +71,17 @@ public class TopTrackActivity extends ActionBarActivity implements TopTrackFragm
     }
 
     @Override
-    public void onTrackSelected(String trackId) {
+    public void onTrackSelected(ArrayList<Track> trackList, int position) {
         //show the fragment fullscreen on a phone
         Intent intent = new Intent(this, PlayTrackActivity.class);
-        intent.putExtra(PlayTrackFragment.TRACK_ID_KEY, trackId);
+        Bundle args = new Bundle();
+        ArrayList<TrackParcel> parcelList = Utility.getTrackParcelList(trackList);
+        args.putParcelableArrayList(PlayTrackFragment.TRACK_PARCEL_KEY, parcelList);
+        args.putInt(PlayTrackFragment.TRACK_POSITION_KEY, position);
+        intent.putExtra(PlayTrackFragment.TRACK_BUNDLE_KEY, args);
         startActivity(intent);
 
-//        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-//        PlayTrackFragment fragment = PlayTrackFragment.newInstance(trackId);
-//        FragmentTransaction transaction = fragmentManager.beginTransaction();
-//        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//        transaction.add(R.id.play_track_container, fragment)
-//                .addToBackStack(null).commit();
-
-
-
+        PlayMediaService.setTrackList(this, trackList);
     }
 }
 
