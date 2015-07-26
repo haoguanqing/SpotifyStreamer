@@ -43,7 +43,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
     ViewHolder viewHolder = new ViewHolder();
 
     Context mContext;
-    private ArrayList<Track> trackList = new ArrayList<>();
+    private ArrayList<Track> mTrackList = new ArrayList<>();
     private int trackPosition = -1;
 
     public PlayTrackFragment() {}
@@ -59,18 +59,26 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        if (args!=null){
-            trackList.clear();
-            ArrayList<TrackParcel> parcelList = args.getParcelableArrayList(TRACK_PARCEL_KEY);
-            trackList = Utility.getTrackList(parcelList);
-            trackPosition = args.getInt(TRACK_POSITION_KEY);
+        if (savedInstanceState==null){
+            Bundle args = getArguments();
+            if (args!=null){
+                mTrackList.clear();
+                ArrayList<TrackParcel> parcelList = args.getParcelableArrayList(TRACK_PARCEL_KEY);
+                mTrackList = Utility.getTrackList(parcelList);
+                trackPosition = args.getInt(TRACK_POSITION_KEY);
+            }
+            mContext = getActivity();
+            Log.i(LOG_TAG, "HGQ: on create get track position = " + trackPosition);
+            Log.i(LOG_TAG, "HGQ: on create get tracklist as follow:\n" + SearchActivity.trackListString(mTrackList));
         }
-        mContext = getActivity();
-        Log.i(LOG_TAG, "HGQ: on create get track position = " + trackPosition);
-        Log.i(LOG_TAG, "HGQ: on create get tracklist as follow:\n" + SearchActivity.trackListString(trackList));
+
     }
 
     @Override
@@ -86,6 +94,8 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         viewHolder.currentTime = (TextView) rootView.findViewById(R.id.current_time);
         viewHolder.totalTime = (TextView) rootView.findViewById(R.id.total_time);
         viewHolder.playButton = (ImageButton) rootView.findViewById(R.id.playButton);
+        viewHolder.nextButton = (ImageButton) rootView.findViewById(R.id.nextButton);
+        viewHolder.prevButton = (ImageButton) rootView.findViewById(R.id.previousButton);
 
         //automatically starts to play track on create view
         PlayMediaService.playTrack(mContext, trackPosition);
@@ -105,7 +115,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
             }
         });
 
-/*        viewHolder.nextButton.setOnClickListener(new View.OnClickListener() {
+        viewHolder.nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PlayMediaService.nextTrack(mContext);
@@ -117,7 +127,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
             public void onClick(View v) {
                 PlayMediaService.previousTrack(mContext);
             }
-        });*/
+        });
 
         return rootView;
     }

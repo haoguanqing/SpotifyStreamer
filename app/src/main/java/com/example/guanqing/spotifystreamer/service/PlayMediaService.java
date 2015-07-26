@@ -19,7 +19,8 @@ import kaaes.spotify.webapi.android.models.Track;
  * Created by Guanqing on 2015/7/21.
  */
 public class PlayMediaService extends Service
-        implements MediaPlayer.OnPreparedListener{
+        implements MediaPlayer.OnPreparedListener,
+        MediaPlayer.OnCompletionListener{
     //tag for debugging
     private static final String LOG_TAG = PlayMediaService.class.getSimpleName();
 
@@ -91,7 +92,7 @@ public class PlayMediaService extends Service
 
         currentPosition = intent.getIntExtra(TRACK_POSITION_KEY, 0);
         String url = trackList.get(currentPosition).preview_url;
-        Log.i(LOG_TAG, "HGQ: start playTrack service with url = "+url);
+        Log.i(LOG_TAG, "HGQ: start playTrack service with url = " + url);
         mPlayer = new MediaPlayer();
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mPlayer.setOnPreparedListener(this);
@@ -105,7 +106,7 @@ public class PlayMediaService extends Service
 
     //------pause track------
     public static void pauseTrack(Context context){
-        Intent serviceIntent = new Intent(context,PlayMediaService.class);
+        Intent serviceIntent = new Intent(context, PlayMediaService.class);
         serviceIntent.setAction(ACTION_PAUSE);
         context.startService(serviceIntent);
     }
@@ -118,7 +119,7 @@ public class PlayMediaService extends Service
 
     //------resume track------
     public static void resumeTrack(Context context){
-        Intent serviceIntent = new Intent(context,PlayMediaService.class);
+        Intent serviceIntent = new Intent(context, PlayMediaService.class);
         serviceIntent.setAction(ACTION_RESUME);
         context.startService(serviceIntent);
     }
@@ -131,33 +132,35 @@ public class PlayMediaService extends Service
 
     //------play next track------
     public static void nextTrack(Context context){
-        Intent serviceIntent = new Intent(context,PlayMediaService.class);
+        Intent serviceIntent = new Intent(context, PlayMediaService.class);
         serviceIntent.setAction(ACTION_NEXT);
         context.startService(serviceIntent);
     }
 
     private void nextTrack(){
         if (currentPosition==trackList.size()-1){
-            playTrack(this, 0);
+            currentPosition = 0;
         }else{
-            currentPosition += 1;
-            playTrack(this, currentPosition);
+            currentPosition = currentPosition+1;
         }
+
+        playTrack(this, currentPosition);
     }
 
     //------play previous track------
     public static void previousTrack(Context context){
-        Intent serviceIntent = new Intent(context,PlayMediaService.class);
-        serviceIntent.setAction(ACTION_NEXT);
+        Intent serviceIntent = new Intent(context, PlayMediaService.class);
+        serviceIntent.setAction(ACTION_PREV);
         context.startService(serviceIntent);
     }
 
     private void previousTrack(){
         if (currentPosition==0){
-            playTrack(this, trackList.size()-1);
+            currentPosition = trackList.size()-1;
         }else{
-            playTrack(this, --currentPosition);
+            currentPosition = currentPosition - 1;
         }
+        playTrack(this, currentPosition);
     }
 
     //------stop play track------
@@ -168,8 +171,8 @@ public class PlayMediaService extends Service
             mPlayer.stop();
         }
         mPlayer.setOnPreparedListener(null);
+        mPlayer.reset();
         mPlayer.release();
-        //mPlayer.reset();
         mPlayer = null;
     }
 
@@ -180,6 +183,11 @@ public class PlayMediaService extends Service
     @Override
     public void onPrepared(MediaPlayer mp) {
         resumeTrack();
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        nextTrack(this);
     }
 
     @Override

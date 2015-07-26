@@ -1,9 +1,11 @@
 package com.example.guanqing.spotifystreamer.service;
 
+import com.example.guanqing.spotifystreamer.searchArtists.ArtistParcel;
 import com.example.guanqing.spotifystreamer.topTracks.TrackParcel;
 
 import java.util.ArrayList;
 
+import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
 
 /**
@@ -32,6 +34,23 @@ public class Utility {
             second = "0"+sec;
         }
         return minute+":"+second;
+    }
+
+
+    public static ArrayList<Artist> getArtistsList(ArrayList<ArtistParcel> parcelList){
+        ArrayList<Artist> artistsList = new ArrayList<>();
+        for (ArtistParcel parcel : parcelList){
+            artistsList.add(parcel.getArtist());
+        }
+        return  artistsList;
+    }
+
+    public static ArrayList<ArtistParcel> getArtistsParcelList(ArrayList<Artist> artistsList){
+        ArrayList<ArtistParcel> parcelList = new ArrayList<>();
+        for (Artist artist : artistsList){
+            parcelList.add(new ArtistParcel(artist));
+        }
+        return parcelList;
     }
 
     public static ArrayList<Track> getTrackList(ArrayList<TrackParcel> parcelList){

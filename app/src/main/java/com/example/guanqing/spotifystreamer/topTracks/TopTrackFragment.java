@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.guanqing.spotifystreamer.R;
+import com.example.guanqing.spotifystreamer.service.Utility;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class TopTrackFragment extends Fragment {
     static final String TRACK_PARCEL_KEY = "TRACK_PARCEL_KEY";
     static final String ARTIST_INFO = "ARTIST_INFO";
     private SpotifyService mSpotifyService = null;
-    private ArrayList<Track> trackList = new ArrayList<>();
+    private ArrayList<Track> mTrackList = new ArrayList<>();
     private Communicator communicator;
 
     public TopTrackFragment() {
@@ -46,11 +47,8 @@ public class TopTrackFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the user's current state
-        ArrayList<TrackParcel> list = new ArrayList<>();
-        for (Track track : trackList){
-            list.add(new TrackParcel(track));
-        }
-        savedInstanceState.putParcelableArrayList(TRACK_PARCEL_KEY, list);
+        ArrayList<TrackParcel> parcelList = Utility.getTrackParcelList(mTrackList);
+        savedInstanceState.putParcelableArrayList(TRACK_PARCEL_KEY, parcelList);
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
@@ -62,11 +60,10 @@ public class TopTrackFragment extends Fragment {
 
         //get the previous state from savedInstanceState
         if (savedInstanceState!=null){
-            ArrayList<TrackParcel> list = savedInstanceState.getParcelableArrayList(TRACK_PARCEL_KEY);
-            trackList.clear();
-            for (TrackParcel track : list){
-                trackList.add(track.getTrack());
-            }
+            ArrayList<TrackParcel> parcelList = savedInstanceState.getParcelableArrayList(TRACK_PARCEL_KEY);
+            mTrackList.clear();
+            mTrackList = Utility.getTrackList(parcelList);
+            savedInstanceState.clear();
         }
     }
 
@@ -91,7 +88,7 @@ public class TopTrackFragment extends Fragment {
         trackListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         //create adapter
         final TrackAdapter adapter = new TrackAdapter(
-                getActivity(),R.layout.fragment_detail_block, trackList);
+                getActivity(),R.layout.fragment_detail_block, mTrackList);
         //set the adapter to trackListView
         trackListView.setAdapter(adapter);
         //set the country parameters
@@ -118,8 +115,8 @@ public class TopTrackFragment extends Fragment {
                 mSpotifyService.getArtistTopTrack(artistId, countryParameter, new Callback<Tracks>() {
                     @Override
                     public void success(Tracks tracks, Response response) {
-                        trackList.clear();
-                        trackList.addAll(new ArrayList<>(tracks.tracks));
+                        mTrackList.clear();
+                        mTrackList.addAll(new ArrayList<>(tracks.tracks));
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -137,9 +134,7 @@ public class TopTrackFragment extends Fragment {
             trackListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                    Track track = trackList.get(position);
-//                    communicator.onTrackSelected(track.id);
-                    communicator.onTrackSelected(trackList, position);
+                    communicator.onTrackSelected(mTrackList, position);
                     trackListView.setItemChecked(position, true);
                 }
             });
