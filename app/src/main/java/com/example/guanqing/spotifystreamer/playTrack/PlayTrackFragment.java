@@ -32,16 +32,15 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
     static final String LOG_TAG = PlayTrackFragment.class.getSimpleName();
     //key strings for bundles and intents
     public final static String TRACK_JSON_STRING_KEY = "TRACK_JSON_STRING_KEY";
-    public final static String TRACK_BUNDLE_KEY = "TRACK_BUNDLE_KEY";
     public final static String TRACK_LIST_KEY = "TRACK_LIST_KEY";
     public final static String TRACK_POSITION_KEY = "TRACK_POSITION_KEY";
-
     //show the playing status
     private boolean mIsPlaying = false;
     private boolean mIsStopped = true;
     //use view holder to set view components
     private ViewHolder viewHolder = new ViewHolder();
-
+    private SeekBar mSeekBar;
+    //define context and data storage variables
     private Context mContext;
     private ArrayList<Track> mTrackList = new ArrayList<>();
     private int mPosition = -1;
@@ -162,7 +161,6 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         viewHolder.prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //update position
                 if (mPosition== 0){
                     mPosition = mTrackList.size()-1;
@@ -217,7 +215,6 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         } else{
             Picasso.with(mContext).load(R.drawable.blank_cd).into(viewHolder.trackThumbnail);
         }
-
     }
 
 
