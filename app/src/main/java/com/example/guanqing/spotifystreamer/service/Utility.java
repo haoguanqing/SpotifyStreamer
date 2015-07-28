@@ -12,6 +12,7 @@ import kaaes.spotify.webapi.android.models.Track;
  * Created by Guanqing on 2015/7/21.
  */
 public class Utility {
+    //public static ArrayList<Track> savedTrackList;
 
     //parse long track_duration (192000) into formatted String (03:12)
     public static String getFormattedDuration(long dur_ms){
@@ -36,7 +37,7 @@ public class Utility {
         return minute+":"+second;
     }
 
-
+    //converts an arraylist of artists into parcelables and vise versa
     public static ArrayList<Artist> getArtistsList(ArrayList<ArtistParcel> parcelList){
         ArrayList<Artist> artistsList = new ArrayList<>();
         for (ArtistParcel parcel : parcelList){
@@ -44,7 +45,6 @@ public class Utility {
         }
         return  artistsList;
     }
-
     public static ArrayList<ArtistParcel> getArtistsParcelList(ArrayList<Artist> artistsList){
         ArrayList<ArtistParcel> parcelList = new ArrayList<>();
         for (Artist artist : artistsList){
@@ -53,6 +53,7 @@ public class Utility {
         return parcelList;
     }
 
+    //converts an arraylist of tracks into parcelables and vise versa
     public static ArrayList<Track> getTrackList(ArrayList<TrackParcel> parcelList){
         ArrayList<Track> trackList = new ArrayList<>();
         for (TrackParcel parcel : parcelList){
@@ -60,7 +61,6 @@ public class Utility {
         }
         return  trackList;
     }
-
     public static ArrayList<TrackParcel> getTrackParcelList(ArrayList<Track> trackList){
         ArrayList<TrackParcel> parcelList = new ArrayList<>();
         for (Track track : trackList){

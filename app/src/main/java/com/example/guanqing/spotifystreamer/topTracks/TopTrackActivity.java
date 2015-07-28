@@ -3,6 +3,7 @@ package com.example.guanqing.spotifystreamer.topTracks;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -80,7 +81,9 @@ public class TopTrackActivity extends ActionBarActivity implements TopTrackFragm
         args.putInt(PlayTrackFragment.TRACK_POSITION_KEY, position);
         intent.putExtra(PlayTrackFragment.TRACK_BUNDLE_KEY, args);
         startActivity(intent);
+        Log.i(LOG_TAG, "HGQ: TopTrackActivity_onTrackSelected send intent");
 
+        //set tracklist for the service
         PlayMediaService.setTrackList(this, trackList);
     }
 }
