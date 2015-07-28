@@ -33,7 +33,7 @@ import retrofit.client.Response;
  */
 public class TopTrackFragment extends Fragment {
     private final String LOG_TAG = TopTrackFragment.class.getSimpleName();
-    static final String TRACK_PARCEL_KEY = "TRACK_PARCEL_KEY";
+    static final String TRACK_PARCEL_KEY = "TRACK_JSON_STRING_KEY";
     static final String ARTIST_INFO = "ARTIST_INFO";
     private SpotifyService mSpotifyService = null;
     private ArrayList<Track> mTrackList = new ArrayList<>();
@@ -47,8 +47,8 @@ public class TopTrackFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the user's current state
-        ArrayList<TrackParcel> parcelList = Utility.getTrackParcelList(mTrackList);
-        savedInstanceState.putParcelableArrayList(TRACK_PARCEL_KEY, parcelList);
+        ArrayList<String> jsonList = Utility.getJsonStringListFromTracks(mTrackList);
+        savedInstanceState.putStringArrayList(TRACK_PARCEL_KEY, jsonList);
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
@@ -60,9 +60,9 @@ public class TopTrackFragment extends Fragment {
 
         //get the previous state from savedInstanceState
         if (savedInstanceState!=null){
-            ArrayList<TrackParcel> parcelList = savedInstanceState.getParcelableArrayList(TRACK_PARCEL_KEY);
+            ArrayList<String> jsonList = savedInstanceState.getStringArrayList(TRACK_PARCEL_KEY);
             mTrackList.clear();
-            mTrackList = Utility.getTrackList(parcelList);
+            mTrackList = Utility.getTrackListFromGson(jsonList);
             savedInstanceState.clear();
         }
     }
