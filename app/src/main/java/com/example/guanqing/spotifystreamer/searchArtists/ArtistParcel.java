@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import kaaes.spotify.webapi.android.models.Artist;
-import kaaes.spotify.webapi.android.models.Track;
 
 /**
  * Created by Guanqing on 2015/7/12.
@@ -21,7 +20,7 @@ public class ArtistParcel implements Parcelable{
     }
 
     public void writeToParcel(Parcel out, int flags) {
-        out.readParcelable(Track.class.getClassLoader());
+        out.readParcelable(Artist.class.getClassLoader());
     }
 
     public static final Creator<ArtistParcel> CREATOR

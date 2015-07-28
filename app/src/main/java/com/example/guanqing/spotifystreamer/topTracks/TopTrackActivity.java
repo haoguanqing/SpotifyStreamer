@@ -75,13 +75,11 @@ public class TopTrackActivity extends ActionBarActivity implements TopTrackFragm
     public void onTrackSelected(ArrayList<Track> trackList, int position) {
         //show the fragment fullscreen on a phone
         Intent intent = new Intent(this, PlayTrackActivity.class);
-        Bundle args = new Bundle();
-        ArrayList<TrackParcel> parcelList = Utility.getTrackParcelList(trackList);
-        args.putParcelableArrayList(PlayTrackFragment.TRACK_PARCEL_KEY, parcelList);
-        args.putInt(PlayTrackFragment.TRACK_POSITION_KEY, position);
-        intent.putExtra(PlayTrackFragment.TRACK_BUNDLE_KEY, args);
+        ArrayList<String> jsonList = Utility.getJsonStringListFromTracks(trackList);
+        intent.putStringArrayListExtra(PlayTrackFragment.TRACK_LIST_KEY, jsonList);
+        intent.putExtra(PlayTrackFragment.TRACK_POSITION_KEY, position);
         startActivity(intent);
-        Log.i(LOG_TAG, "HGQ: TopTrackActivity_onTrackSelected send intent");
+        Log.i(LOG_TAG, "HGQ: TopTrackActivity finish onTrackSelected and send intent");
 
         //set tracklist for the service
         PlayMediaService.setTrackList(this, trackList);

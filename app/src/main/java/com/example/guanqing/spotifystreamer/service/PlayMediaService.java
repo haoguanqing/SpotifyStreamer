@@ -9,7 +9,6 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.example.guanqing.spotifystreamer.searchArtists.SearchActivity;
-import com.example.guanqing.spotifystreamer.topTracks.TrackParcel;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,9 +48,7 @@ public class PlayMediaService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getAction();
-        if(action.equals(ACTION_SET_TRACKLIST)){
-            setTrackList(intent);
-        }else if (action.equals(ACTION_PREV)){
+        if (action.equals(ACTION_PREV)){
             previousTrack();
         } else if (action.equals(ACTION_PLAY)){
             playTrack(intent);
@@ -67,26 +64,8 @@ public class PlayMediaService extends Service
     }
 
     //------set tracks list------
-    //save the top tracks list in the service for the selected artist
-/*    public static void setTrackList(Context context, ArrayList<Track> lst){
-        trackList.clear();
-        trackList = lst;
-        Log.i(LOG_TAG, "HGQ: Service pass setTracklist");
-    }*/
-
     public static void setTrackList(Context context, ArrayList<Track> lst){
-        Intent serviceIntent = new Intent(context, PlayMediaService.class);
-        serviceIntent.setAction(ACTION_SET_TRACKLIST);
-        serviceIntent.putParcelableArrayListExtra("gag", Utility.getTrackParcelList(lst));
-        context.startService(serviceIntent);
-        Log.i(LOG_TAG, "HGQ: Service pass setTracklist");
-    }
-
-    private void setTrackList(Intent intent){
-        Log.i(LOG_TAG, "HGQ: Service start to set tracklist");
-        trackList.clear();
-        ArrayList<TrackParcel> l = intent.getParcelableArrayListExtra("gag");
-        trackList = Utility.getTrackList(l);
+        trackList = lst;
         Log.i(LOG_TAG, "HGQ: Service set tracklist as follow:\n" + SearchActivity.trackListString(trackList));
     }
 

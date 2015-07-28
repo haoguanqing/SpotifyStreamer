@@ -157,7 +157,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
                 if (mPosition==mTrackList.size()-1){
                     mPosition = 0;
                 }else{
-                    mPosition++;
+                    mPosition--;
                 }
                 //play the previous track
                 if(mIsStopped){

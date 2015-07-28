@@ -1,15 +1,16 @@
 package com.example.guanqing.spotifystreamer.playTrack;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 
 import com.example.guanqing.spotifystreamer.R;
 import com.example.guanqing.spotifystreamer.service.Utility;
-import com.example.guanqing.spotifystreamer.topTracks.TrackParcel;
 
 import java.util.ArrayList;
+
+import kaaes.spotify.webapi.android.models.Track;
 
 public class PlayTrackActivity extends ActionBarActivity{
     //tag for debugging
@@ -24,10 +25,11 @@ public class PlayTrackActivity extends ActionBarActivity{
         //show dialog as fragment for the device
         //TODO: modify the data passed by intent
         if (savedInstanceState==null){
-            Bundle bundle = getIntent().getBundleExtra(PlayTrackFragment.TRACK_BUNDLE_KEY);
-            ArrayList<TrackParcel> parcelList = bundle.getParcelableArrayList(PlayTrackFragment.TRACK_PARCEL_KEY);
-            int position = bundle.getInt(PlayTrackFragment.TRACK_POSITION_KEY);
-            PlayTrackFragment fragment = PlayTrackFragment.newInstance(Utility.getTrackList(parcelList), position);
+            Intent intent = getIntent();
+            ArrayList<String> jsonList = intent.getStringArrayListExtra(PlayTrackFragment.TRACK_LIST_KEY);
+            ArrayList<Track> trackList  = Utility.getTrackListFromGson(jsonList);
+            int position = intent.getIntExtra(PlayTrackFragment.TRACK_POSITION_KEY, 0);
+            PlayTrackFragment fragment = PlayTrackFragment.newInstance(trackList, position);
 
             getSupportFragmentManager().beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -35,7 +37,6 @@ public class PlayTrackActivity extends ActionBarActivity{
                     .addToBackStack(null).commit();
         }
 
-        Log.i(LOG_TAG, "HGQ: PlayTrackActivity_onCreate");
     }
 
 

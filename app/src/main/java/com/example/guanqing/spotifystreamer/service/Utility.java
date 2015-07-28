@@ -2,6 +2,7 @@ package com.example.guanqing.spotifystreamer.service;
 
 import com.example.guanqing.spotifystreamer.searchArtists.ArtistParcel;
 import com.example.guanqing.spotifystreamer.topTracks.TrackParcel;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -12,7 +13,42 @@ import kaaes.spotify.webapi.android.models.Track;
  * Created by Guanqing on 2015/7/21.
  */
 public class Utility {
-    //public static ArrayList<Track> savedTrackList;
+    //do the conversion between ArrayList of artists and ArrayList of strings using Gson
+    public static ArrayList<Artist> getArtistListFromGson(ArrayList<String> strList){
+        ArrayList<Artist> artistList = new ArrayList<>();
+        for (String s: strList){
+            Artist artist = new Gson().fromJson(s, Artist.class);
+            artistList.add(artist);
+        }
+        return artistList;
+    }
+    public static ArrayList<String> getJsonStringListFromArtists(ArrayList<Artist> artistList){
+        ArrayList<String> strList = new ArrayList<>();
+        for (Artist artist: artistList){
+            String s = new Gson().toJson(artist);
+            strList.add(s);
+        }
+        return strList;
+    }
+
+
+    //do the conversion between ArrayList of tracks and ArrayList of strings using Gson
+    public static ArrayList<Track> getTrackListFromGson(ArrayList<String> strList){
+        ArrayList<Track> trackList = new ArrayList<>();
+        for (String s: strList){
+            Track track = new Gson().fromJson(s, Track.class);
+            trackList.add(track);
+        }
+        return trackList;
+    }
+    public static ArrayList<String> getJsonStringListFromTracks(ArrayList<Track> trackList){
+        ArrayList<String> strList = new ArrayList<>();
+        for (Track track: trackList){
+            String s = new Gson().toJson(track);
+            strList.add(s);
+        }
+        return strList;
+    }
 
     //parse long track_duration (192000) into formatted String (03:12)
     public static String getFormattedDuration(long dur_ms){
