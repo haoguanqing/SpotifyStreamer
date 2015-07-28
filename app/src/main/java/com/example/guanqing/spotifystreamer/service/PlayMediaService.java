@@ -41,13 +41,6 @@ public class PlayMediaService extends Service
     //media player
     MediaPlayer mPlayer;
 
-    //indicates the state of the service
-    enum State{
-        Preparing,
-        Playing,
-        Paused
-    }
-
     private static ArrayList<Track> trackList = new ArrayList<>();
     private static ArrayList<String> trackUrlList = new ArrayList<>();
     private int currentPosition = -99;
@@ -71,11 +64,9 @@ public class PlayMediaService extends Service
     }
 
     //------set tracks list------
-    //save the top tracks list in the service for the selected artist
     public static void setTrackList(Context context, ArrayList<Track> lst){
-        trackList.clear();
         trackList = lst;
-        Log.i(LOG_TAG, "HGQ: set tracklist as follow:\n" + SearchActivity.trackListString(trackList));
+        Log.i(LOG_TAG, "HGQ: Service set tracklist as follow:\n" + SearchActivity.trackListString(trackList));
     }
 
     //------play track------
@@ -84,7 +75,7 @@ public class PlayMediaService extends Service
         serviceIntent.setAction(ACTION_PLAY);
         serviceIntent.putExtra(TRACK_POSITION_KEY, position);
         context.startService(serviceIntent);
-        Log.i(LOG_TAG, "HGQ: pass playTrack intent with position = "+ position);
+        Log.i(LOG_TAG, "HGQ: Service pass playTrack intent with position = "+ position);
     }
 
     private void playTrack(Intent intent){
@@ -100,7 +91,7 @@ public class PlayMediaService extends Service
             mPlayer.setDataSource(url);
             mPlayer.prepareAsync();
         }catch (IOException e){
-            Log.e(LOG_TAG, "HGQ: play track IOException");
+            Log.e(LOG_TAG, "HGQ: Service play track IOException");
         }
     }
 

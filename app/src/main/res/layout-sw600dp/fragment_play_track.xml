@@ -32,8 +32,8 @@
         android:layout_gravity="center_horizontal" />
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="264dp"
+        android:layout_width="wrap_content"
+        android:layout_height="240dp"
         android:id="@+id/track_thumbnail"
         android:src="@drawable/blank_cd"
         android:scaleType="centerCrop"

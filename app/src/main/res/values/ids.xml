@@ -2,4 +2,5 @@
 <resources>
     <item type="id" name="artist_blockview_tag" />
     <item type="id" name="top_track_blockview_tag" />
+    <item type="id" name="play_track_view_tag" />
 </resources>

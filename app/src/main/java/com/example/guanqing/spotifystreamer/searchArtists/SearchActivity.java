@@ -54,16 +54,11 @@ public class SearchActivity extends ActionBarActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -97,13 +92,15 @@ public class SearchActivity extends ActionBarActivity implements
 
     @Override
     public void onTrackSelected(ArrayList<Track> trackList, int position) {
+        //show fragment as dialog on a tablet
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         PlayTrackFragment fragment = PlayTrackFragment.newInstance(trackList, position);
-        //show fragment as dialog on a tablet
         fragment.show(fragmentManager, "dialog");
+
         Log.i(LOG_TAG, "HGQ: finish onTrackSelected with position = " + position);
         Log.i(LOG_TAG, "HGQ: track list as below:\n"+trackListString(trackList));
 
+        //set tracklist for the service
         PlayMediaService.setTrackList(this, trackList);
     }
 
