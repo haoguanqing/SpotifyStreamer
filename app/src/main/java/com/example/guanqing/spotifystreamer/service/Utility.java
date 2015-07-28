@@ -1,7 +1,6 @@
 package com.example.guanqing.spotifystreamer.service;
 
 import com.example.guanqing.spotifystreamer.searchArtists.ArtistParcel;
-import com.example.guanqing.spotifystreamer.topTracks.TrackParcel;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -89,19 +88,4 @@ public class Utility {
         return parcelList;
     }
 
-    //converts an arraylist of tracks into parcelables and vise versa
-    public static ArrayList<Track> getTrackList(ArrayList<TrackParcel> parcelList){
-        ArrayList<Track> trackList = new ArrayList<>();
-        for (TrackParcel parcel : parcelList){
-            trackList.add(parcel.getTrack());
-        }
-        return  trackList;
-    }
-    public static ArrayList<TrackParcel> getTrackParcelList(ArrayList<Track> trackList){
-        ArrayList<TrackParcel> parcelList = new ArrayList<>();
-        for (Track track : trackList){
-            parcelList.add(new TrackParcel(track));
-        }
-        return parcelList;
-    }
 }

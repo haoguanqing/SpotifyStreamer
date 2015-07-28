@@ -17,7 +17,6 @@ import com.example.guanqing.spotifystreamer.R;
 import com.example.guanqing.spotifystreamer.searchArtists.SearchActivity;
 import com.example.guanqing.spotifystreamer.service.PlayMediaService;
 import com.example.guanqing.spotifystreamer.service.Utility;
-import com.example.guanqing.spotifystreamer.topTracks.TrackParcel;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -32,17 +31,16 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
     //tag for debugging
     static final String LOG_TAG = PlayTrackFragment.class.getSimpleName();
     //key strings for bundles and intents
-    public final static String TRACK_PARCEL_KEY = "TRACK_PARCEL_KEY";
-    public final static String TRACK_BUNDLE_KEY = "TRACK_BUNDLE_KEY";
+    public final static String TRACK_JSON_STRING_KEY = "TRACK_JSON_STRING_KEY";
     public final static String TRACK_LIST_KEY = "TRACK_LIST_KEY";
     public final static String TRACK_POSITION_KEY = "TRACK_POSITION_KEY";
-
     //show the playing status
     private boolean mIsPlaying = false;
     private boolean mIsStopped = true;
     //use view holder to set view components
     private ViewHolder viewHolder = new ViewHolder();
-
+    private SeekBar mSeekBar;
+    //define context and data storage variables
     private Context mContext;
     private ArrayList<Track> mTrackList = new ArrayList<>();
     private int mPosition = -1;
@@ -53,7 +51,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
     public static PlayTrackFragment newInstance(ArrayList<Track> trackList, int position){
         PlayTrackFragment frag = new PlayTrackFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(TRACK_PARCEL_KEY, Utility.getTrackParcelList(trackList));
+        args.putStringArrayList(TRACK_JSON_STRING_KEY, Utility.getJsonStringListFromTracks(trackList));
         args.putInt(TRACK_POSITION_KEY, position);
         frag.setArguments(args);
 
@@ -62,8 +60,13 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current state
+        ArrayList<String> jsonList = Utility.getJsonStringListFromTracks(mTrackList);
+        savedInstanceState.putStringArrayList(TRACK_JSON_STRING_KEY, jsonList);
+        savedInstanceState.putInt(TRACK_POSITION_KEY, mPosition);
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
@@ -71,15 +74,20 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         super.onCreate(savedInstanceState);
         if (savedInstanceState==null){
             Bundle args = getArguments();
-            if (args!=null){
-                mTrackList.clear();
-                ArrayList<TrackParcel> parcelList = args.getParcelableArrayList(TRACK_PARCEL_KEY);
-                mTrackList = Utility.getTrackList(parcelList);
-                mPosition = args.getInt(TRACK_POSITION_KEY);
-            }
+            mTrackList.clear();
+            ArrayList<String> stringList = args.getStringArrayList(TRACK_JSON_STRING_KEY);
+            mTrackList = Utility.getTrackListFromGson(stringList);
+            mPosition = args.getInt(TRACK_POSITION_KEY);
             mContext = getActivity();
             Log.i(LOG_TAG, "HGQ: PlayTrackFragment_onCreate get track position = " + mPosition);
             Log.i(LOG_TAG, "HGQ: PlayTrackFragment_onCreate get tracklist as follow:\n" + SearchActivity.trackListString(mTrackList));
+        }else{
+            //retrieve data from saved instance
+            ArrayList<String> jsonList = savedInstanceState.getStringArrayList(TRACK_JSON_STRING_KEY);
+            mTrackList.clear();
+            mTrackList = Utility.getTrackListFromGson(jsonList);
+            mPosition = savedInstanceState.getInt(TRACK_POSITION_KEY);
+            savedInstanceState.clear();
         }
     }
 
@@ -87,6 +95,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_play_track, container, false);
+
         //initialize viewHolder
         viewHolder.artistName = (TextView) rootView.findViewById(R.id.artist_name);
         viewHolder.albumName = (TextView) rootView.findViewById(R.id.album_name);
@@ -102,7 +111,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         updateTrackInfo();
         updatePlayButton();
 
-        //
+        //set onClickListeners for the buttons
         viewHolder.playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,10 +161,9 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         viewHolder.prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //update position
-                if (mPosition==mTrackList.size()-1){
-                    mPosition = 0;
+                if (mPosition== 0){
+                    mPosition = mTrackList.size()-1;
                 }else{
                     mPosition--;
                 }
@@ -207,7 +215,6 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         } else{
             Picasso.with(mContext).load(R.drawable.blank_cd).into(viewHolder.trackThumbnail);
         }
-
     }
 
 
@@ -225,7 +232,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         if (getDialog() == null)
             return;
         if (getResources().getConfiguration().orientation==1){
-            getDialog().getWindow().setLayout(386, 556);
+            getDialog().getWindow().setLayout(386, 560);
         }else{
             getDialog().getWindow().setLayout(556, 394);
         }
