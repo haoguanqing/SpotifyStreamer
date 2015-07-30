@@ -16,6 +16,7 @@ import com.example.guanqing.spotifystreamer.service.Utility;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
 import kaaes.spotify.webapi.android.models.Track;
 
 
@@ -45,7 +46,7 @@ public class TopTrackActivity extends ActionBarActivity implements TopTrackFragm
                     .add(R.id.top_track_container, topTrackFragment)
                     .commit();
         }
-
+        EventBus.getDefault().register(this);
     }
 
 
@@ -83,6 +84,12 @@ public class TopTrackActivity extends ActionBarActivity implements TopTrackFragm
 
         //set tracklist for the service
         PlayMediaService.setTrackList(this, trackList);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }
 

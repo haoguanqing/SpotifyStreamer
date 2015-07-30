@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
     android:orientation="vertical"
     android:background="@color/customize_gray"
 
@@ -17,23 +17,23 @@
         android:layout_gravity="center"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="8dp"
-        android:layout_width="480dp"
-        android:layout_height="wrap_content">
+        android:layout_marginBottom="6dp"
+        android:layout_width="440dp"
+        android:layout_height="40dp">
 
         <TextView android:text="@string/track_name"
             android:id="@+id/track_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center_vertical"
             android:textColor="@color/lighter_gray"
             android:typeface="monospace"
-            android:textSize="32sp"/>
+            android:textSize="22sp"/>
 
         <LinearLayout
             android:orientation="vertical"
-            android:paddingLeft="128dp"
+            android:paddingRight="@dimen/activity_horizontal_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -42,25 +42,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/material_blue_grey_800"
-                android:layout_gravity="left" />
+                android:layout_gravity="right" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/artist_name"
                 android:id="@+id/artist_name"
                 android:textColor="@color/material_blue_grey_800"
                 android:typeface="monospace"
-                android:layout_gravity="left" />
+                android:layout_gravity="right" />
 
         </LinearLayout>
     </LinearLayout>
 
 
     <ImageView
-        android:layout_width="480dp"
-        android:layout_height="168dp"
+        android:layout_width="420dp"
+        android:layout_height="166dp"
         android:id="@+id/track_thumbnail"
         android:src="@drawable/blank_cd"
         android:scaleType="centerCrop"
@@ -68,7 +68,7 @@
         />
 
     <SeekBar
-        android:layout_width="480dp"
+        android:layout_width="420dp"
         android:layout_height="wrap_content"
         android:id="@+id/seekBar"
         android:progressDrawable="@android:color/holo_orange_light"
@@ -79,7 +79,7 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="480dp"
+        android:layout_width="440dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -110,7 +110,7 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="480dp"
+        android:layout_width="440dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -118,7 +118,7 @@
 
         <ImageButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:layout_weight="1"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:src="@android:drawable/ic_media_previous"
@@ -126,14 +126,14 @@
 
         <ImageButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:layout_weight="1"
             android:src="@android:drawable/ic_media_play"
             android:id="@+id/playButton" />
 
         <ImageButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:layout_weight="1"
             android:src="@android:drawable/ic_media_next"
             android:layout_marginRight="@dimen/activity_horizontal_margin"

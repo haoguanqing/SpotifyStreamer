@@ -14,13 +14,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.guanqing.spotifystreamer.R;
-import com.example.guanqing.spotifystreamer.searchArtists.SearchActivity;
 import com.example.guanqing.spotifystreamer.service.PlayMediaService;
+import com.example.guanqing.spotifystreamer.service.TrackProgressEvent;
 import com.example.guanqing.spotifystreamer.service.Utility;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
 import kaaes.spotify.webapi.android.models.Track;
 
 
@@ -35,15 +36,13 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
     public final static String TRACK_LIST_KEY = "TRACK_LIST_KEY";
     public final static String TRACK_POSITION_KEY = "TRACK_POSITION_KEY";
     //show the playing status
-    private boolean mIsPlaying = false;
-    private boolean mIsStopped = true;
+    private boolean mIsPlaying;
     //use view holder to set view components
-    private ViewHolder viewHolder = new ViewHolder();
-    private SeekBar mSeekBar;
+    private ViewHolder viewHolder;
     //define context and data storage variables
     private Context mContext;
-    private ArrayList<Track> mTrackList = new ArrayList<>();
-    private int mPosition = -1;
+    private ArrayList<Track> mTrackList;
+    private int mPosition;
 
     public PlayTrackFragment() {}
 
@@ -72,23 +71,26 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //initialize variables
+        mIsPlaying = false;
+        viewHolder = new ViewHolder();
+
         if (savedInstanceState==null){
             Bundle args = getArguments();
-            mTrackList.clear();
             ArrayList<String> stringList = args.getStringArrayList(TRACK_JSON_STRING_KEY);
             mTrackList = Utility.getTrackListFromGson(stringList);
             mPosition = args.getInt(TRACK_POSITION_KEY);
             mContext = getActivity();
             Log.i(LOG_TAG, "HGQ: PlayTrackFragment_onCreate get track position = " + mPosition);
-            Log.i(LOG_TAG, "HGQ: PlayTrackFragment_onCreate get tracklist as follow:\n" + SearchActivity.trackListString(mTrackList));
         }else{
             //retrieve data from saved instance
             ArrayList<String> jsonList = savedInstanceState.getStringArrayList(TRACK_JSON_STRING_KEY);
-            mTrackList.clear();
             mTrackList = Utility.getTrackListFromGson(jsonList);
             mPosition = savedInstanceState.getInt(TRACK_POSITION_KEY);
             savedInstanceState.clear();
         }
+
+
     }
 
     @Override
@@ -108,6 +110,9 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         viewHolder.nextButton = (ImageButton) rootView.findViewById(R.id.nextButton);
         viewHolder.prevButton = (ImageButton) rootView.findViewById(R.id.previousButton);
 
+        //play track on create view
+        PlayMediaService.playTrack(mContext, mPosition);
+        mIsPlaying = true;
         updateTrackInfo();
         updatePlayButton();
 
@@ -115,21 +120,13 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         viewHolder.playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mIsStopped){
-                    PlayMediaService.playTrack(mContext, mPosition);
-                    mIsPlaying = true;
-                    mIsStopped = false;
-                    updatePlayButton();
+                if (mIsPlaying) {
+                    PlayMediaService.pauseTrack(mContext);
                 } else {
-                    if (mIsPlaying) {
-                        PlayMediaService.pauseTrack(mContext);
-                        mIsPlaying = !mIsPlaying;
-                    } else {
-                        PlayMediaService.resumeTrack(mContext);
-                        mIsPlaying = !mIsPlaying;
-                    }
-                    updatePlayButton();
+                    PlayMediaService.resumeTrack(mContext);
                 }
+                mIsPlaying = !mIsPlaying;
+                updatePlayButton();
             }
         });
 
@@ -143,14 +140,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
                     mPosition++;
                 }
                 //play the next track
-                if(mIsStopped){
-                    PlayMediaService.playTrack(mContext, mPosition);
-
-                    mIsStopped = false;
-                    updatePlayButton();
-                }else{
-                    PlayMediaService.nextTrack(mContext);
-                }
+                PlayMediaService.nextTrack(mContext);
                 //update view
                 mIsPlaying = true;
                 updatePlayButton();
@@ -162,19 +152,14 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
             @Override
             public void onClick(View v) {
                 //update position
-                if (mPosition== 0){
-                    mPosition = mTrackList.size()-1;
-                }else{
+                if (mPosition == 0) {
+                    mPosition = mTrackList.size() - 1;
+                } else {
                     mPosition--;
                 }
                 //play the previous track
-                if(mIsStopped){
-                    PlayMediaService.playTrack(mContext, mPosition);
-                    mIsStopped = false;
-                    updatePlayButton();
-                }else{
-                    PlayMediaService.previousTrack(mContext);
-                }
+                PlayMediaService.previousTrack(mContext);
+
                 //update view
                 mIsPlaying = true;
                 updateTrackInfo();
@@ -182,6 +167,25 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
             }
         });
 
+        viewHolder.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    PlayMediaService.setTrackProgress(mContext, progress);
+                    viewHolder.seekBar.setProgress(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        EventBus.getDefault().register(this);
         return rootView;
     }
 
@@ -200,7 +204,9 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         viewHolder.albumName.setText(currentTrack.album.name);
         viewHolder.artistName.setText(currentTrack.artists.get(0).name);
         viewHolder.trackName.setText(currentTrack.name);
-        viewHolder.totalTime.setText(Utility.getFormattedDuration(currentTrack.duration_ms));
+        viewHolder.seekBar.setProgress(0);
+        viewHolder.seekBar.setMax(30);
+        viewHolder.totalTime.setText(Utility.getFormattedDuration(30000));
         //set track thumbnail
         if (!currentTrack.album.images.isEmpty()){
             String imageUrl;
@@ -218,6 +224,12 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
     }
 
 
+    public void onEventMainThread(TrackProgressEvent event){
+        int progress = event.getCurrentProgress();
+        viewHolder.currentTime.setText(Utility.getFormattedDuration(progress));
+        viewHolder.seekBar.setProgress(progress/1000);
+        Log.i(LOG_TAG, "HGQ: on event main thread " + Utility.getFormattedDuration(progress));
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -251,5 +263,12 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         ImageButton playButton;
         ImageButton nextButton;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
 
 }

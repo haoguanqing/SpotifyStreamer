@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -13,6 +14,7 @@ import com.example.guanqing.spotifystreamer.searchArtists.SearchActivity;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
 import kaaes.spotify.webapi.android.models.Track;
 
 /**
@@ -25,25 +27,21 @@ public class PlayMediaService extends Service
     private static final String LOG_TAG = PlayMediaService.class.getSimpleName();
 
     //intent actions to handle
-    public static final String ACTION_SET_TRACKLIST = "com.example.guanqing.spotifystreamer.action.SET_TRACKLIST";
+    public static final String ACTION_SET_TRACK_PROGRESS = "com.example.guanqing.spotifystreamer.action.SET_TRACK_PROGRESS";
     public static final String ACTION_PREV = "com.example.guanqing.spotifystreamer.action.PREV";
     public static final String ACTION_PLAY = "com.example.guanqing.spotifystreamer.action.PLAY";
     public static final String ACTION_PAUSE = "com.example.guanqing.spotifystreamer.action.PAUSE";
     public static final String ACTION_RESUME = "com.example.guanqing.spotifystreamer.action.RESUME";
     public static final String ACTION_NEXT = "com.example.guanqing.spotifystreamer.action.NEXT";
     //intent keys
-    public static final String TRACKLIST_KEY = "TRACKLIST_KEY";
     public static final String TRACK_POSITION_KEY = "TRACK_POSITION_KEY";
-
-    //The volume we reduce to when we lose audio focus
-    public static final float DUCK_VOLUME = 0.1f;
+    public static final String TRACK_PROGRESS_KEY = "TRACK_PROGRESS_KEY";
 
     //media player
-    MediaPlayer mPlayer;
-
-    private static ArrayList<Track> trackList = new ArrayList<>();
-    private static ArrayList<String> trackUrlList = new ArrayList<>();
-    private int currentPosition = -99;
+    private MediaPlayer mPlayer;
+    private BroadcastTrackProgressTask mBroadcastTask;
+    private static ArrayList<Track> trackList;
+    private int currentPosition;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -58,6 +56,8 @@ public class PlayMediaService extends Service
             resumeTrack();
         }else if (action.equals(ACTION_NEXT)){
             nextTrack();
+        }else if (action.equals(ACTION_SET_TRACK_PROGRESS)){
+            setTrackProgress(intent.getIntExtra(TRACK_PROGRESS_KEY, 0));
         }
 
         return START_NOT_STICKY;
@@ -75,7 +75,7 @@ public class PlayMediaService extends Service
         serviceIntent.setAction(ACTION_PLAY);
         serviceIntent.putExtra(TRACK_POSITION_KEY, position);
         context.startService(serviceIntent);
-        Log.i(LOG_TAG, "HGQ: Service pass playTrack intent with position = "+ position);
+        Log.i(LOG_TAG, "HGQ: Service pass playTrack intent with position = " + position);
     }
 
     private void playTrack(Intent intent){
@@ -118,6 +118,9 @@ public class PlayMediaService extends Service
     private void resumeTrack(){
         if(mPlayer!=null){
             mPlayer.start();
+
+            mBroadcastTask = new BroadcastTrackProgressTask();
+            mBroadcastTask.execute();
         }
     }
 
@@ -165,6 +168,46 @@ public class PlayMediaService extends Service
         mPlayer.reset();
         mPlayer.release();
         mPlayer = null;
+    }
+
+    //------SeekBar settings------
+    public static void setTrackProgress(Context context, int progress){
+        Intent intent = new Intent(context, PlayMediaService.class);
+        intent.setAction(ACTION_SET_TRACK_PROGRESS);
+        intent.putExtra(TRACK_PROGRESS_KEY, progress);
+        context.startService(intent);
+    }
+
+    private void setTrackProgress(int progress){
+        //if (mPlayer.isPlaying())
+        mPlayer.seekTo(progress * 1000);
+    }
+
+    //------broadcast functions------
+    private void broadcastTrackProgress(){
+        TrackProgressEvent event = TrackProgressEvent.newInstance(
+                trackList.get(currentPosition),
+                mPlayer.getCurrentPosition(),
+                mPlayer.getDuration());
+        EventBus.getDefault().post(event);
+    }
+
+    class BroadcastTrackProgressTask extends AsyncTask<Void, Void, Void>{
+        @Override
+        protected Void doInBackground(Void... params) {
+            while(!isCancelled()){
+                try{
+                    Thread.sleep(1000);
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+
+                if(mPlayer.isPlaying()) {
+                    broadcastTrackProgress();
+                }
+            }
+            return null;
+        }
     }
 
 

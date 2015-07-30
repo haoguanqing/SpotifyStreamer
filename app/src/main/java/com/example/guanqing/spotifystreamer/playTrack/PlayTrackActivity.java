@@ -2,7 +2,6 @@ package com.example.guanqing.spotifystreamer.playTrack;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 
 import com.example.guanqing.spotifystreamer.R;
@@ -10,6 +9,7 @@ import com.example.guanqing.spotifystreamer.service.Utility;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
 import kaaes.spotify.webapi.android.models.Track;
 
 public class PlayTrackActivity extends ActionBarActivity{
@@ -23,7 +23,6 @@ public class PlayTrackActivity extends ActionBarActivity{
         getSupportActionBar().hide();
 
         //show dialog as fragment for the device
-        //TODO: modify the data passed by intent
         if (savedInstanceState==null){
             Intent intent = getIntent();
             ArrayList<String> jsonList = intent.getStringArrayListExtra(PlayTrackFragment.TRACK_LIST_KEY);
@@ -32,12 +31,15 @@ public class PlayTrackActivity extends ActionBarActivity{
             PlayTrackFragment fragment = PlayTrackFragment.newInstance(trackList, position);
 
             getSupportFragmentManager().beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .replace(R.id.play_track_container, fragment)
-                    .addToBackStack(null).commit();
+                    .commit();
         }
-
+        EventBus.getDefault().register(this);
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }
