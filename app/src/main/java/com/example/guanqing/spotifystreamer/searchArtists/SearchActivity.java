@@ -112,10 +112,4 @@ public class SearchActivity extends ActionBarActivity implements
         }
         return x;
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }
 }
