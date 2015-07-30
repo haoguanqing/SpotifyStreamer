@@ -9,7 +9,6 @@ import com.example.guanqing.spotifystreamer.service.Utility;
 
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
 import kaaes.spotify.webapi.android.models.Track;
 
 public class PlayTrackActivity extends ActionBarActivity{
@@ -34,12 +33,12 @@ public class PlayTrackActivity extends ActionBarActivity{
                     .replace(R.id.play_track_container, fragment)
                     .commit();
         }
-        EventBus.getDefault().register(this);
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+
     }
 }

@@ -173,6 +173,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
                 if (fromUser) {
                     PlayMediaService.setTrackProgress(mContext, progress);
                     viewHolder.seekBar.setProgress(progress);
+                    viewHolder.currentTime.setText(Utility.getFormattedDuration(progress*1000));
                 }
             }
 
@@ -223,7 +224,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         }
     }
 
-
+    //handle event posted in the service
     public void onEventMainThread(TrackProgressEvent event){
         int progress = event.getCurrentProgress();
         viewHolder.currentTime.setText(Utility.getFormattedDuration(progress));
@@ -269,6 +270,4 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
-
-
 }
