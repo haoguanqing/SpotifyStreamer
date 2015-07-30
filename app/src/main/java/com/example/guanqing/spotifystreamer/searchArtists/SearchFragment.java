@@ -77,8 +77,7 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //get spotify service
-        SpotifyApi api = new SpotifyApi();
-        mSpotifyService = api.getService();
+        mSpotifyService = new SpotifyApi().getService();
         //get views
         final View rootView = inflater.inflate(R.layout.fragment_main_search, container, false);
         final SearchView searchView = (SearchView) rootView.findViewById(R.id.searchView);

@@ -43,6 +43,7 @@ public class SearchActivity extends ActionBarActivity implements
                 transaction.commit();
             }
         }
+
     }
 
     @Override
@@ -110,5 +111,11 @@ public class SearchActivity extends ActionBarActivity implements
             x += track.name + "\n";
         }
         return x;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 }
