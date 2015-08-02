@@ -89,8 +89,6 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
             mPosition = savedInstanceState.getInt(TRACK_POSITION_KEY);
             savedInstanceState.clear();
         }
-
-
     }
 
     @Override
