@@ -74,13 +74,13 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         //initialize variables
         mIsPlaying = false;
         viewHolder = new ViewHolder();
+        mContext = getActivity();
 
         if (savedInstanceState==null){
             Bundle args = getArguments();
             ArrayList<String> stringList = args.getStringArrayList(TRACK_JSON_STRING_KEY);
             mTrackList = Utility.getTrackListFromGson(stringList);
             mPosition = args.getInt(TRACK_POSITION_KEY);
-            mContext = getActivity();
             Log.i(LOG_TAG, "HGQ: PlayTrackFragment_onCreate get track position = " + mPosition);
         }else{
             //retrieve data from saved instance
@@ -109,10 +109,12 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         viewHolder.prevButton = (ImageButton) rootView.findViewById(R.id.previousButton);
 
         //play track on create view
-        PlayMediaService.playTrack(mContext, mPosition);
-        mIsPlaying = true;
-        updateTrackInfo();
-        updatePlayButton();
+        if (mIsPlaying==false){
+            PlayMediaService.playTrack(mContext, mPosition);
+            mIsPlaying = true;
+            updateTrackInfo();
+            updatePlayButton();
+        }
 
         //set onClickListeners for the buttons
         viewHolder.playButton.setOnClickListener(new View.OnClickListener() {
