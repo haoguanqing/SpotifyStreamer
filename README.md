@@ -76,9 +76,13 @@ Snapshots:
  
 ![Image of Yaktocat](http://i.imgur.com/WXUhSCV.png)
 
+![Image of Yaktocat](http://i.imgur.com/Q08o0LZ.png)
+
 [tablet]
 
 ![Image of Yaktocat](http://i.imgur.com/Ma2uAm0.png)
+
+![Image of Yaktocat](http://i.imgur.com/WhANZX6.png)
 
 
  
