@@ -245,9 +245,12 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         if (getDialog() == null)
             return;
         if (getResources().getConfiguration().orientation==1){
-            getDialog().getWindow().setLayout(386, 560);
+            //get dimensions from dimens.xml so as to write them in dp and retrieve them in px
+            getDialog().getWindow().setLayout(getResources().getDimensionPixelSize(R.dimen.dialog_horizontal_size),
+                    getResources().getDimensionPixelSize(R.dimen.dialog_vertical_size));
         }else{
-            getDialog().getWindow().setLayout(556, 394);
+            getDialog().getWindow().setLayout(getResources().getDimensionPixelSize(R.dimen.dialog_vertical_size),
+                    getResources().getDimensionPixelSize(R.dimen.dialog_horizontal_size));
         }
     }
 
