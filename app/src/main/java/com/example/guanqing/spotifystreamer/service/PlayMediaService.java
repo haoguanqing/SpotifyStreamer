@@ -179,7 +179,6 @@ public class PlayMediaService extends Service
     }
 
     private void setTrackProgress(int progress){
-        //if (mPlayer.isPlaying())
         mPlayer.seekTo(progress * 1000);
     }
 

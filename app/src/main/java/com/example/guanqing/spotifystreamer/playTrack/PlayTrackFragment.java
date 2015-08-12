@@ -1,5 +1,6 @@
 package com.example.guanqing.spotifystreamer.playTrack;
 
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -35,14 +36,17 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
     public final static String TRACK_JSON_STRING_KEY = "TRACK_JSON_STRING_KEY";
     public final static String TRACK_LIST_KEY = "TRACK_LIST_KEY";
     public final static String TRACK_POSITION_KEY = "TRACK_POSITION_KEY";
+    public final static String TRACK_ISPLAYING_KEY = "TRACK_ISPLAYING_KEY";
     //show the playing status
     private boolean mIsPlaying;
+    private boolean mIsPaused;
     //use view holder to set view components
     private ViewHolder viewHolder;
     //define context and data storage variables
     private Context mContext;
     private ArrayList<Track> mTrackList;
     private int mPosition;
+    private int mProgress;
 
     public PlayTrackFragment() {}
 
@@ -54,7 +58,6 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         args.putInt(TRACK_POSITION_KEY, position);
         frag.setArguments(args);
 
-        Log.i(LOG_TAG, "HGQ: PlayTrackFragment_newInstance created");
         return frag;
     }
 
@@ -64,6 +67,9 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         ArrayList<String> jsonList = Utility.getJsonStringListFromTracks(mTrackList);
         savedInstanceState.putStringArrayList(TRACK_JSON_STRING_KEY, jsonList);
         savedInstanceState.putInt(TRACK_POSITION_KEY, mPosition);
+        savedInstanceState.putBoolean(TRACK_ISPLAYING_KEY, mIsPlaying);
+        savedInstanceState.putBoolean("pause", mIsPaused);
+        savedInstanceState.putInt("prog", mProgress);
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -72,18 +78,23 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //initialize variables
-        mIsPlaying = false;
+
         viewHolder = new ViewHolder();
         mContext = getActivity();
 
         if (savedInstanceState==null){
+            mProgress = 0;
+            mIsPlaying = false;
+            mIsPaused = false;
             Bundle args = getArguments();
             ArrayList<String> stringList = args.getStringArrayList(TRACK_JSON_STRING_KEY);
             mTrackList = Utility.getTrackListFromGson(stringList);
             mPosition = args.getInt(TRACK_POSITION_KEY);
-            Log.i(LOG_TAG, "HGQ: PlayTrackFragment_onCreate get track position = " + mPosition);
         }else{
             //retrieve data from saved instance
+            mProgress = savedInstanceState.getInt("prog");
+            mIsPlaying = savedInstanceState.getBoolean(TRACK_ISPLAYING_KEY);
+            mIsPaused = savedInstanceState.getBoolean("pause");
             ArrayList<String> jsonList = savedInstanceState.getStringArrayList(TRACK_JSON_STRING_KEY);
             mTrackList = Utility.getTrackListFromGson(jsonList);
             mPosition = savedInstanceState.getInt(TRACK_POSITION_KEY);
@@ -108,13 +119,22 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
         viewHolder.nextButton = (ImageButton) rootView.findViewById(R.id.nextButton);
         viewHolder.prevButton = (ImageButton) rootView.findViewById(R.id.previousButton);
 
-        //play track on create view
-        if (mIsPlaying==false){
-            PlayMediaService.playTrack(mContext, mPosition);
-            mIsPlaying = true;
-            updateTrackInfo();
-            updatePlayButton();
+        //play track or retain playing status on create view
+        if (!mIsPlaying) {
+            if (!mIsPaused) {
+                PlayMediaService.playTrack(mContext, mPosition);
+                mIsPlaying = true;
+            }else{
+                Log.i(LOG_TAG, "HGQ: mProgress = " + mProgress);
+                viewHolder.seekBar.setProgress(mProgress / 1000);
+                viewHolder.currentTime.setText(Utility.getFormattedDuration(mProgress));
+                PlayMediaService.pauseTrack(mContext);
+            }
+        } else {
+            PlayMediaService.resumeTrack(mContext);
         }
+        updateTrackInfo();
+        updatePlayButton();
 
         //set onClickListeners for the buttons
         viewHolder.playButton.setOnClickListener(new View.OnClickListener() {
@@ -126,6 +146,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
                     PlayMediaService.resumeTrack(mContext);
                 }
                 mIsPlaying = !mIsPlaying;
+                mIsPaused = !mIsPaused;
                 updatePlayButton();
             }
         });
@@ -143,6 +164,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
                 PlayMediaService.nextTrack(mContext);
                 //update view
                 mIsPlaying = true;
+                mIsPaused = false;
                 updatePlayButton();
                 updateTrackInfo();
             }
@@ -159,9 +181,9 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
                 }
                 //play the previous track
                 PlayMediaService.previousTrack(mContext);
-
                 //update view
                 mIsPlaying = true;
+                mIsPaused = false;
                 updateTrackInfo();
                 updatePlayButton();
             }
@@ -172,7 +194,7 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     PlayMediaService.setTrackProgress(mContext, progress);
-                    viewHolder.seekBar.setProgress(progress);
+                    seekBar.setProgress(progress);
                     viewHolder.currentTime.setText(Utility.getFormattedDuration(progress*1000));
                 }
             }
@@ -226,10 +248,10 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
 
     //handle event posted in the service
     public void onEventMainThread(TrackProgressEvent event){
-        int progress = event.getCurrentProgress();
-        viewHolder.currentTime.setText(Utility.getFormattedDuration(progress));
-        viewHolder.seekBar.setProgress(progress/1000);
-        Log.i(LOG_TAG, "HGQ: on event main thread " + Utility.getFormattedDuration(progress));
+        mProgress = event.getCurrentProgress();
+        viewHolder.currentTime.setText(Utility.getFormattedDuration(mProgress));
+        viewHolder.seekBar.setProgress(mProgress / 1000);
+        //Log.i(LOG_TAG, "HGQ: on event main thread " + Utility.getFormattedDuration(mProgress));
     }
 
     @Override
@@ -252,6 +274,17 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
             getDialog().getWindow().setLayout(getResources().getDimensionPixelSize(R.dimen.dialog_vertical_size),
                     getResources().getDimensionPixelSize(R.dimen.dialog_horizontal_size));
         }
+    }
+
+    //check if play media service is still running. return boolean
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private class ViewHolder {
