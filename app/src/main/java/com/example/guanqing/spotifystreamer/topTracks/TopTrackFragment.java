@@ -145,6 +145,5 @@ public class TopTrackFragment extends Fragment {
     public interface Communicator {
         void onTrackSelected(ArrayList<Track> trackList, int position);
     }
-
 }
 

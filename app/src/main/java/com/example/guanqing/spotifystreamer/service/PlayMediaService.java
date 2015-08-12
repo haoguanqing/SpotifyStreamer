@@ -9,8 +9,6 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.example.guanqing.spotifystreamer.searchArtists.SearchActivity;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -66,7 +64,6 @@ public class PlayMediaService extends Service
     //------set tracks list------
     public static void setTrackList(Context context, ArrayList<Track> lst){
         trackList = lst;
-        Log.i(LOG_TAG, "HGQ: Service set tracklist as follow:\n" + SearchActivity.trackListString(trackList));
     }
 
     //------play track------
@@ -75,7 +72,6 @@ public class PlayMediaService extends Service
         serviceIntent.setAction(ACTION_PLAY);
         serviceIntent.putExtra(TRACK_POSITION_KEY, position);
         context.startService(serviceIntent);
-        Log.i(LOG_TAG, "HGQ: Service pass playTrack intent with position = " + position);
     }
 
     private void playTrack(Intent intent){
@@ -137,7 +133,6 @@ public class PlayMediaService extends Service
         }else{
             currentPosition = currentPosition+1;
         }
-
         playTrack(this, currentPosition);
     }
 
@@ -208,7 +203,6 @@ public class PlayMediaService extends Service
             return null;
         }
     }
-
 
     @Override
     public IBinder onBind(Intent intent) {return null;}
