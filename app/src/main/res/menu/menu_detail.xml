@@ -7,4 +7,13 @@
         android:title="@string/action_settings"
         android:orderInCategory="100"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_item_share"
+        app:showAsAction="ifRoom"
+        android:title="@string/action_share"
+        android:icon="@android:drawable/ic_menu_share"
+        android:actionProviderClass=
+            "android.widget.ShareActionProvider" />
+
 </menu>

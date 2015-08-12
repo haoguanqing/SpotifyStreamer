@@ -4,18 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.guanqing.spotifystreamer.R;
 import com.example.guanqing.spotifystreamer.playTrack.PlayTrackFragment;
 import com.example.guanqing.spotifystreamer.service.PlayMediaService;
+import com.example.guanqing.spotifystreamer.service.TrackProgressEvent;
 import com.example.guanqing.spotifystreamer.topTracks.TopTrackActivity;
 import com.example.guanqing.spotifystreamer.topTracks.TopTrackFragment;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
 
@@ -24,14 +25,17 @@ public class SearchActivity extends ActionBarActivity implements
         SearchFragment.Communicator,
         TopTrackFragment.Communicator{
     private static final String LOG_TAG = SearchActivity.class.getSimpleName();
-    boolean mTwoPane;
+    private boolean mTwoPane;
+    private Track mCurrentTrack;
+    public String[] artistInfo;
     static final String ARTIST_INFO = "ARTIST_INFO";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        artistInfo = null;
+        mCurrentTrack = null;
         mTwoPane = getResources().getBoolean(R.bool.tablet_layout);
         //if it is a tablet, use the fragment manager to conduct transaction
         if (mTwoPane){
@@ -43,7 +47,7 @@ public class SearchActivity extends ActionBarActivity implements
                 transaction.commit();
             }
         }
-
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -59,10 +63,29 @@ public class SearchActivity extends ActionBarActivity implements
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }if(id == R.id.menu_item_share){
+            if (artistInfo!= null) {
+                startActivity(Intent.createChooser(createShareIntent(), "Share"));
+            }
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private Intent createShareIntent(){
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        shareIntent.setType("text/plain");
+        String shareContent = "Hey! I am listening to the top 10 tracks of " + artistInfo[0] + " using SpotifyStreamer!";
+        if (mCurrentTrack!= null){
+            String url = mCurrentTrack.album.images.get(1).url;
+            shareContent = "Hey! I am listening to " + mCurrentTrack.name
+                    + " - " + mCurrentTrack.artists.get(0).name
+                    + " using SpotifyStreamer! (" + url + ")";
+        }
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareContent);
+        return shareIntent;
+    }
 
     //implement interfaces
     @Override
@@ -71,7 +94,8 @@ public class SearchActivity extends ActionBarActivity implements
         if (artist.images.size() != 0) {
             imageUrl = artist.images.get(0).url;
         }
-        String[] artistInfo = {artist.name, artist.id, imageUrl};
+        String[] strArray = {artist.name, artist.id, imageUrl};
+        artistInfo = strArray;
         if (mTwoPane){
             //two pane
             Bundle args = new Bundle();
@@ -91,6 +115,11 @@ public class SearchActivity extends ActionBarActivity implements
         }
     }
 
+    //handle event posted in the service
+    public void onEventMainThread(TrackProgressEvent event){
+        mCurrentTrack = event.getTrack();
+    }
+
     @Override
     public void onTrackSelected(ArrayList<Track> trackList, int position) {
         //show fragment as dialog on a tablet
@@ -98,18 +127,7 @@ public class SearchActivity extends ActionBarActivity implements
         PlayTrackFragment fragment = PlayTrackFragment.newInstance(trackList, position);
         fragment.show(fragmentManager, "dialog");
 
-        Log.i(LOG_TAG, "HGQ: finish onTrackSelected with position = " + position);
-        Log.i(LOG_TAG, "HGQ: track list as below:\n"+trackListString(trackList));
-
         //set tracklist for the service
         PlayMediaService.setTrackList(this, trackList);
-    }
-
-    public static String trackListString(ArrayList<Track> trackList) {
-        String x = "";
-        for (Track track: trackList){
-            x += track.name + "\n";
-        }
-        return x;
     }
 }

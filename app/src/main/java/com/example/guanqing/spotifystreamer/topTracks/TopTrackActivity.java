@@ -12,15 +12,19 @@ import com.example.guanqing.spotifystreamer.playTrack.PlayTrackActivity;
 import com.example.guanqing.spotifystreamer.playTrack.PlayTrackFragment;
 import com.example.guanqing.spotifystreamer.searchArtists.SearchFragment;
 import com.example.guanqing.spotifystreamer.service.PlayMediaService;
+import com.example.guanqing.spotifystreamer.service.TrackProgressEvent;
 import com.example.guanqing.spotifystreamer.service.Utility;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
 import kaaes.spotify.webapi.android.models.Track;
 
 
 public class TopTrackActivity extends ActionBarActivity implements TopTrackFragment.Communicator{
     private final String LOG_TAG = SearchFragment.class.getSimpleName();
+    private android.support.v7.widget.ShareActionProvider mShareActionProvider;
+    private String[] artistInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +32,7 @@ public class TopTrackActivity extends ActionBarActivity implements TopTrackFragm
         setContentView(R.layout.activity_detail);
 
         setTitle(getString(R.string.title_activity_detail));
-        String[] artistInfo = null;
+        artistInfo = null;
         if (getIntent()!=null){
             artistInfo = getIntent().getStringArrayExtra(Intent.EXTRA_TEXT);
             getSupportActionBar().setSubtitle(artistInfo[0]);
@@ -45,11 +49,11 @@ public class TopTrackActivity extends ActionBarActivity implements TopTrackFragm
                     .add(R.id.top_track_container, topTrackFragment)
                     .commit();
         }
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_detail, menu);
         return true;
     }
@@ -60,8 +64,34 @@ public class TopTrackActivity extends ActionBarActivity implements TopTrackFragm
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }if(id == R.id.menu_item_share){
+            if (artistInfo!= null) {
+                startActivity(Intent.createChooser(createShareIntent(), "Share"));
+            }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    Track mCurrentTrack;
+    //handle event posted in the service
+    public void onEventMainThread(TrackProgressEvent event){
+        mCurrentTrack = event.getTrack();
+    }
+
+    private Intent createShareIntent(){
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        shareIntent.setType("text/plain");
+        String shareContent = "Hey! I am listening to the top 10 tracks of " + artistInfo[0] + " using SpotifyStreamer!";
+        if (mCurrentTrack!= null){
+            String url = mCurrentTrack.album.images.get(1).url;
+            shareContent = "Hey! I am listening to " + mCurrentTrack.name
+                    + " - " + mCurrentTrack.artists.get(0).name
+                    + " using SpotifyStreamer! (" + url + ")";
+        }
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareContent);
+        return shareIntent;
     }
 
     @Override

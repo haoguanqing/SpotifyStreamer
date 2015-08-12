@@ -3,6 +3,7 @@
     <string name="app_name">Spotify Streamer</string>
     <string name="search_for_artists">FIND THE ARTIST</string>
     <string name="action_settings">Settings</string>
+    <string name="action_share">Share</string>
     <string name="artist_name">artist name</string>
     <string name="track_name">track name</string>
     <string name="album_name">album name</string>
