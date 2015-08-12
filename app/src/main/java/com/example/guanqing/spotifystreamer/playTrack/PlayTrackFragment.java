@@ -2,7 +2,11 @@ package com.example.guanqing.spotifystreamer.playTrack;
 
 import android.app.ActivityManager;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -305,5 +310,31 @@ public class PlayTrackFragment extends android.support.v4.app.DialogFragment {
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+
+    //set notification when tracks are start to play
+    public void setNotification(String trackName){
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager notificationManager = (NotificationManager) getSystemService(ns);
+
+        @SuppressWarnings("deprecation")
+        Notification notification = new Notification(R.drawable.cover, null, System.currentTimeMillis());
+
+        RemoteViews notificationView = new RemoteViews(mContext.getPackageName(), R.layout.notification);
+        notificationView.setTextViewText(R.id.track_name, trackName);
+
+        //the intent that is started when the notification is clicked (works)
+        Intent notificationIntent = new Intent(this, PlayerActivity.class);
+        PendingIntent pendingNotificationIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notification.contentView = notificationView;
+        notification.contentIntent = pendingNotificationIntent;
+
+        Intent switchIntent = new Intent("com.example.test.ACTION_PLAY");
+        PendingIntent pendingSwitchIntent = PendingIntent.getBroadcast(this, 0, switchIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notificationView.setOnClickPendingIntent(R.id.play_pause, pendingSwitchIntent);
+        notificationManager.notify(1, notification);
     }
 }

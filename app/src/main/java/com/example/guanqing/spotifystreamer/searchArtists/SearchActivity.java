@@ -27,6 +27,7 @@ public class SearchActivity extends ActionBarActivity implements
     private static final String LOG_TAG = SearchActivity.class.getSimpleName();
     private boolean mTwoPane;
     private Track mCurrentTrack;
+    MenuItem shareIcon;
     public String[] artistInfo;
     static final String ARTIST_INFO = "ARTIST_INFO";
 
@@ -54,6 +55,8 @@ public class SearchActivity extends ActionBarActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        shareIcon = menu.findItem(R.id.menu_item_share);
+        shareIcon.setVisible(false);
         return true;
     }
 
@@ -90,6 +93,7 @@ public class SearchActivity extends ActionBarActivity implements
     //implement interfaces
     @Override
     public void onArtistSelected(Artist artist) {
+        shareIcon.setVisible(true);
         String imageUrl = "";
         if (artist.images.size() != 0) {
             imageUrl = artist.images.get(0).url;
