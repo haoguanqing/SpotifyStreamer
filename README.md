@@ -36,7 +36,7 @@ finished by June 29, 2015
  
  Stage 2
 --------------
-finished by July 30, 2015
+finished by Aug 13, 2015
 
 **User Interface - Layout**
  - [Phone] UI contains a screen for searching for an artist and displaying a list of artist results
