@@ -1,13 +1,26 @@
 package com.example.guanqing.spotifystreamer.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
+
+import com.example.guanqing.spotifystreamer.R;
+import com.example.guanqing.spotifystreamer.searchArtists.SearchActivity;
+import com.example.guanqing.spotifystreamer.topTracks.TopTrackActivity;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,15 +44,17 @@ public class PlayMediaService extends Service
     public static final String ACTION_PAUSE = "com.example.guanqing.spotifystreamer.action.PAUSE";
     public static final String ACTION_RESUME = "com.example.guanqing.spotifystreamer.action.RESUME";
     public static final String ACTION_NEXT = "com.example.guanqing.spotifystreamer.action.NEXT";
-    //intent keys
+    //intent keys & constants
     public static final String TRACK_POSITION_KEY = "TRACK_POSITION_KEY";
     public static final String TRACK_PROGRESS_KEY = "TRACK_PROGRESS_KEY";
+    public static final String PREF_SHOW_CONTROLS_IN_LOCKSCREEN = "pref_show_controls_in_lockscreen";
+    public static final int NOTIFICATION_ID = 98789;
 
     //media player
     private MediaPlayer mPlayer;
     private BroadcastTrackProgressTask mBroadcastTask;
-    private static ArrayList<Track> trackList;
-    private int currentPosition;
+    private static ArrayList<Track> mTrackList;
+    private int mCurrentPosition;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -63,7 +78,7 @@ public class PlayMediaService extends Service
 
     //------set tracks list------
     public static void setTrackList(Context context, ArrayList<Track> lst){
-        trackList = lst;
+        mTrackList = lst;
     }
 
     //------play track------
@@ -77,8 +92,8 @@ public class PlayMediaService extends Service
     private void playTrack(Intent intent){
         stopPlayTrack();
 
-        currentPosition = intent.getIntExtra(TRACK_POSITION_KEY, 0);
-        String url = trackList.get(currentPosition).preview_url;
+        mCurrentPosition = intent.getIntExtra(TRACK_POSITION_KEY, 0);
+        String url = mTrackList.get(mCurrentPosition).preview_url;
         Log.i(LOG_TAG, "HGQ: start playTrack service with url = " + url);
         mPlayer = new MediaPlayer();
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -89,6 +104,7 @@ public class PlayMediaService extends Service
         }catch (IOException e){
             Log.e(LOG_TAG, "HGQ: Service play track IOException");
         }
+        setNotification();
     }
 
     //------pause track------
@@ -102,6 +118,13 @@ public class PlayMediaService extends Service
         if(mPlayer!=null){
             mPlayer.pause();
         }
+        setNotification();
+    }
+
+    public static Intent getPauseIntent(Context context){
+        Intent intent = new Intent(context, PlayMediaService.class);
+        intent.setAction(ACTION_PAUSE);
+        return intent;
     }
 
     //------resume track------
@@ -118,6 +141,13 @@ public class PlayMediaService extends Service
             mBroadcastTask = new BroadcastTrackProgressTask();
             mBroadcastTask.execute();
         }
+        setNotification();
+    }
+
+    public static Intent getResumeIntent(Context context){
+        Intent intent = new Intent(context, PlayMediaService.class);
+        intent.setAction(ACTION_RESUME);
+        return intent;
     }
 
     //------play next track------
@@ -128,12 +158,19 @@ public class PlayMediaService extends Service
     }
 
     private void nextTrack(){
-        if (currentPosition==trackList.size()-1){
-            currentPosition = 0;
+        if (mCurrentPosition == mTrackList.size()-1){
+            mCurrentPosition = 0;
         }else{
-            currentPosition = currentPosition+1;
+            mCurrentPosition = mCurrentPosition +1;
         }
-        playTrack(this, currentPosition);
+        playTrack(this, mCurrentPosition);
+        setNotification();
+    }
+
+    public static Intent getPlayNextIntent(Context context){
+        Intent intent = new Intent(context, PlayMediaService.class);
+        intent.setAction(ACTION_NEXT);
+        return intent;
     }
 
     //------play previous track------
@@ -144,12 +181,19 @@ public class PlayMediaService extends Service
     }
 
     private void previousTrack(){
-        if (currentPosition==0){
-            currentPosition = trackList.size()-1;
+        if (mCurrentPosition ==0){
+            mCurrentPosition = mTrackList.size()-1;
         }else{
-            currentPosition = currentPosition - 1;
+            mCurrentPosition = mCurrentPosition - 1;
         }
-        playTrack(this, currentPosition);
+        playTrack(this, mCurrentPosition);
+        setNotification();
+    }
+
+    public static Intent getPlayPrevIntent(Context context){
+        Intent intent = new Intent(context, PlayMediaService.class);
+        intent.setAction(ACTION_PREV);
+        return intent;
     }
 
     //------stop play track------
@@ -180,7 +224,7 @@ public class PlayMediaService extends Service
     //------broadcast functions------
     private void broadcastTrackProgress(){
         TrackProgressEvent event = TrackProgressEvent.newInstance(
-                trackList.get(currentPosition),
+                mTrackList.get(mCurrentPosition),
                 mPlayer.getCurrentPosition(),
                 mPlayer.getDuration());
         EventBus.getDefault().post(event);
@@ -202,6 +246,65 @@ public class PlayMediaService extends Service
             }
             return null;
         }
+    }
+
+    //----set notification when tracks are start to play----
+    private void setNotification(){
+        Track track = mTrackList.get(mCurrentPosition);
+        //new remote view
+        RemoteViews view = new RemoteViews(getPackageName(), R.layout.notification);
+        view.setTextViewText(R.id.track_name, track.name);
+        view.setTextViewText(R.id.artist_name, track.artists.get(0).name);
+
+        //playback controls
+        view.setOnClickPendingIntent(R.id.previousButton,
+                PendingIntent.getService(this, 0, getPlayPrevIntent(this), 0));
+        view.setOnClickPendingIntent(R.id.nextButton,
+                PendingIntent.getService(this, 0, getPlayNextIntent(this), 0));
+        if(mPlayer!=null && mPlayer.isPlaying()){
+            view.setImageViewResource(R.id.playButton, android.R.drawable.ic_media_pause);
+            view.setOnClickPendingIntent(R.id.playButton,
+                    PendingIntent.getService(this, 0, getPauseIntent(this), 0));
+        }else{
+            view.setImageViewResource(R.id.playButton, android.R.drawable.ic_media_play);
+            view.setOnClickPendingIntent(R.id.playButton,
+                    PendingIntent.getService(this, 0, getResumeIntent(this), 0));
+        }
+
+        //content action
+        Intent showAppIntent;
+        if(getResources().getBoolean(R.bool.tablet_layout)){
+            showAppIntent = new Intent(this, SearchActivity.class);
+        }else{
+            showAppIntent = new Intent(this, TopTrackActivity.class);
+        }
+        showAppIntent.setAction(Intent.ACTION_MAIN);
+        showAppIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        PendingIntent showAppPendingIntent = PendingIntent.getActivity(this, 0, showAppIntent,0);
+
+        //prepare notification
+        android.support.v4.app.NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(android.R.drawable.ic_media_play)
+                .setContent(view)
+                .setContentIntent(showAppPendingIntent)
+                .setOngoing(mPlayer != null && mPlayer.isPlaying());
+
+        //show playback controls in lockscreen
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean showControlInLockscreen = sharedPreferences.getBoolean(PREF_SHOW_CONTROLS_IN_LOCKSCREEN, true);
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH && showControlInLockscreen) {
+            notificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
+        }
+
+        //display notification
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        Notification notification = notificationBuilder.build();
+        notificationManager.notify(NOTIFICATION_ID, notification);
+
+        //load thumbnail
+        String imageUrl = track.album.images.get(1).url;
+        Picasso.with(this).load(imageUrl).into(view, R.id.track_thumbnail, NOTIFICATION_ID, notification);
+
     }
 
     @Override
