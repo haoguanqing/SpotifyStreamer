@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="customize_gray">#101010</color>
+    <color name="customize_gray">#080808</color>
     <color name="notification_gray">#202020</color>
 
     <drawable name="screen_background_light">#ffffffff</drawable>

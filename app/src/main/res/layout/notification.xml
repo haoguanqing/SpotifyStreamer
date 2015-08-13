@@ -12,6 +12,7 @@
         android:src="@drawable/blank_cd"
         android:scaleType="centerCrop"
         android:layout_gravity="center_horizontal"
+        android:padding="2dp"
         />
 
     <LinearLayout
@@ -72,7 +73,4 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:id="@+id/nextButton" />
     </LinearLayout>
-
-
-
 </LinearLayout>

@@ -81,7 +81,7 @@ public class SearchActivity extends ActionBarActivity implements
         shareIntent.setType("text/plain");
         String shareContent = "Hey! I am listening to the top 10 tracks of " + artistInfo[0] + " using SpotifyStreamer!";
         if (mCurrentTrack!= null){
-            String url = mCurrentTrack.album.images.get(1).url;
+            String url = mCurrentTrack.preview_url;
             shareContent = "Hey! I am listening to " + mCurrentTrack.name
                     + " - " + mCurrentTrack.artists.get(0).name
                     + " using SpotifyStreamer! (" + url + ")";
