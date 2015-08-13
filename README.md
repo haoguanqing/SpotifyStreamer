@@ -74,15 +74,19 @@ Snapshots:
 
 [phone]
  
-![Image of Yaktocat](http://i.imgur.com/WXUhSCV.png)
+![Image of SpotifyStreamer](http://i.imgur.com/RuP8AF5.png)
 
-![Image of Yaktocat](http://i.imgur.com/Q08o0LZ.png)
+![Image of SpotifyStreamer](http://i.imgur.com/u0zaXw9.png)
+
+notification and sharing functionality
+
+![Image of SpotifyStreamer](http://i.imgur.com/QyM9J46.png)
 
 [tablet]
 
-![Image of Yaktocat](http://i.imgur.com/Ma2uAm0.png)
+![Image of SpotifyStreamer](http://i.imgur.com/8ZUchRz.png)
 
-![Image of Yaktocat](http://i.imgur.com/WhANZX6.png)
+![Image of SpotifyStreamer](http://i.imgur.com/k3HHW7B.png)
 
 
  
