@@ -1,10 +1,8 @@
 #Spotify Streamer
 
-Project 1: Spotify Streamer of Udacity Android developer Nanodegree
-
 Stage 1
 --------------
-finished by June 29, 2015
+*June 29, 2015*
 
 **User Interface - Layout**
 
@@ -36,7 +34,7 @@ finished by June 29, 2015
  
  Stage 2
 --------------
-finished by Aug 13, 2015
+*Aug 13, 2015*
 
 **User Interface - Layout**
  - [Phone] UI contains a screen for searching for an artist and displaying a list of artist results
