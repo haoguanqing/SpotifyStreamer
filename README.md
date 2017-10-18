@@ -1,8 +1,8 @@
-#Spotify Streamer
+# Spotify Streamer
 
 Stage 1
 --------------
-*June 29, 2015*
+###### *June 29, 2015*
 
 **User Interface - Layout**
 
@@ -30,11 +30,11 @@ Stage 1
  ![Image of Yaktocat](http://i.imgur.com/W2Kzp9b.png)
  
 
-
+---
  
  Stage 2
 --------------
-*Aug 13, 2015*
+###### *Aug 13, 2015*
 
 **User Interface - Layout**
  - [Phone] UI contains a screen for searching for an artist and displaying a list of artist results
